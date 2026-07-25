@@ -28,6 +28,7 @@ export default function AdminLoginPage() {
 
       if (res.ok && data.success) {
         localStorage.setItem('admin_authenticated', 'true');
+        localStorage.setItem('custom_admin_passcode', passcode);
         router.push('/admin');
       } else {
         setError(data.message || 'Invalid passcode.');

@@ -10,16 +10,19 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const updatedData: PortfolioData = await request.json();
-    const success = savePortfolioData(updatedData);
+    savePortfolioData(updatedData);
 
-    if (success) {
-      return NextResponse.json({ success: true, data: updatedData });
-    } else {
-      return NextResponse.json(
-        { success: false, message: 'Failed to save data' },
-        { status: 500 }
-      );
+    const response = NextResponse.json({ success: true, data: updatedData });
+
+    if (updatedData.personalInfo?.adminPasscode) {
+      response.cookies.set('custom_admin_passcode', updatedData.personalInfo.adminPasscode, {
+        httpOnly: true,
+        path: '/',
+        maxAge: 60 * 60 * 24 * 365 // 1 year
+      });
     }
+
+    return response;
   } catch (error) {
     return NextResponse.json(
       { success: false, message: 'Error processing update' },

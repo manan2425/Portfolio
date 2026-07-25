@@ -72,6 +72,9 @@ export default function AdminDashboardPage() {
     setSaving(true);
     setSaveSuccess(false);
     try {
+      if (updatedData.personalInfo?.adminPasscode) {
+        localStorage.setItem('custom_admin_passcode', updatedData.personalInfo.adminPasscode);
+      }
       const res = await fetch('/api/admin/data', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
