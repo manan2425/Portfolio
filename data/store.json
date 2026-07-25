@@ -11,7 +11,16 @@
     "resumeUrl": "/resume4.pdf",
     "isAvailable": true,
     "location": "Anand, Gujarat, India",
-    "adminPasscode": "admin123"
+    "adminPasscode": "admin123",
+    "overviewMetric1Value": "04+",
+    "overviewMetric1Label": "Projects",
+    "overviewMetric2Value": "08+",
+    "overviewMetric2Label": "Tech Stack",
+    "overviewMetric3Value": "100%",
+    "overviewMetric3Label": "Type Safe",
+    "overviewMetric4Value": "99+",
+    "overviewMetric4Label": "Performance",
+    "overviewSummary": "Specialized in engineering full-stack platforms with modern App Router architecture."
   },
   "projects": [
     {

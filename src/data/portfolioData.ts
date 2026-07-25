@@ -11,6 +11,15 @@ export interface PersonalInfo {
   isAvailable: boolean;
   location: string;
   adminPasscode: string;
+  overviewMetric1Value?: string;
+  overviewMetric1Label?: string;
+  overviewMetric2Value?: string;
+  overviewMetric2Label?: string;
+  overviewMetric3Value?: string;
+  overviewMetric3Label?: string;
+  overviewMetric4Value?: string;
+  overviewMetric4Label?: string;
+  overviewSummary?: string;
 }
 
 export interface Project {
@@ -65,6 +74,15 @@ export const initialPortfolioData: PortfolioData = {
     isAvailable: true,
     location: "Anand, Gujarat, India",
     adminPasscode: "admin123",
+    overviewMetric1Value: "04+",
+    overviewMetric1Label: "Projects",
+    overviewMetric2Value: "08+",
+    overviewMetric2Label: "Tech Stack",
+    overviewMetric3Value: "100%",
+    overviewMetric3Label: "Type Safe",
+    overviewMetric4Value: "99+",
+    overviewMetric4Label: "Performance",
+    overviewSummary: "Specialized in engineering full-stack platforms with modern App Router architecture.",
   },
   projects: [
     {

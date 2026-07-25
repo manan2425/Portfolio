@@ -628,16 +628,6 @@ export default function AdminDashboardPage() {
                   />
                 </div>
 
-                <div className="form-group">
-                  <label className="form-label">Admin Passcode</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={data.personalInfo.adminPasscode}
-                    onChange={(e) => handleProfileChange('adminPasscode', e.target.value)}
-                  />
-                </div>
-
                 <div className="form-group" style={{ gridColumn: 'span 2', marginTop: '10px' }}>
                   <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontWeight: 600 }}>
                     <input
@@ -648,6 +638,125 @@ export default function AdminDashboardPage() {
                     />
                     <span>Display "Available for Hire" status pulse badge on Hero section</span>
                   </label>
+                </div>
+              </div>
+
+              {/* OVERVIEW SECTION BENTO CARD EDITOR */}
+              <div style={{ marginTop: '36px', paddingTop: '28px', borderTop: '1px solid var(--border-card)' }}>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '6px' }}>Hero Overview Section Editor</h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '20px' }}>
+                  Customize the 4 key metrics and summary note displayed in the Hero Overview bento card on your home page.
+                </p>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
+                  <div style={{ padding: '16px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-card)' }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--accent-blue)', marginBottom: '8px' }}>METRIC 1</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                      <input
+                        type="text"
+                        placeholder="Value (e.g. 04+)"
+                        className="form-input"
+                        value={data.personalInfo.overviewMetric1Value || ''}
+                        onChange={(e) => handleProfileChange('overviewMetric1Value', e.target.value)}
+                      />
+                      <input
+                        type="text"
+                        placeholder="Label (e.g. Projects)"
+                        className="form-input"
+                        value={data.personalInfo.overviewMetric1Label || ''}
+                        onChange={(e) => handleProfileChange('overviewMetric1Label', e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ padding: '16px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-card)' }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--accent-blue)', marginBottom: '8px' }}>METRIC 2</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                      <input
+                        type="text"
+                        placeholder="Value (e.g. 08+)"
+                        className="form-input"
+                        value={data.personalInfo.overviewMetric2Value || ''}
+                        onChange={(e) => handleProfileChange('overviewMetric2Value', e.target.value)}
+                      />
+                      <input
+                        type="text"
+                        placeholder="Label (e.g. Tech Stack)"
+                        className="form-input"
+                        value={data.personalInfo.overviewMetric2Label || ''}
+                        onChange={(e) => handleProfileChange('overviewMetric2Label', e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ padding: '16px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-card)' }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--accent-blue)', marginBottom: '8px' }}>METRIC 3</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                      <input
+                        type="text"
+                        placeholder="Value (e.g. 100%)"
+                        className="form-input"
+                        value={data.personalInfo.overviewMetric3Value || ''}
+                        onChange={(e) => handleProfileChange('overviewMetric3Value', e.target.value)}
+                      />
+                      <input
+                        type="text"
+                        placeholder="Label (e.g. Type Safe)"
+                        className="form-input"
+                        value={data.personalInfo.overviewMetric3Label || ''}
+                        onChange={(e) => handleProfileChange('overviewMetric3Label', e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ padding: '16px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-card)' }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--accent-blue)', marginBottom: '8px' }}>METRIC 4</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                      <input
+                        type="text"
+                        placeholder="Value (e.g. 99+)"
+                        className="form-input"
+                        value={data.personalInfo.overviewMetric4Value || ''}
+                        onChange={(e) => handleProfileChange('overviewMetric4Value', e.target.value)}
+                      />
+                      <input
+                        type="text"
+                        placeholder="Label (e.g. Performance)"
+                        className="form-input"
+                        value={data.personalInfo.overviewMetric4Label || ''}
+                        onChange={(e) => handleProfileChange('overviewMetric4Label', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Overview Summary Note</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="Summary note displayed beneath metrics"
+                    value={data.personalInfo.overviewSummary || ''}
+                    onChange={(e) => handleProfileChange('overviewSummary', e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {/* SECURITY & PASSWORD CHANGE SECTION */}
+              <div style={{ marginTop: '36px', paddingTop: '28px', borderTop: '1px solid var(--border-card)' }}>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '6px' }}>Admin Security & Password Change</h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '16px' }}>
+                  Update your secret admin login passcode.
+                </p>
+
+                <div style={{ maxWidth: '400px' }} className="form-group">
+                  <label className="form-label">New Admin Passcode / Password</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    value={data.personalInfo.adminPasscode}
+                    onChange={(e) => handleProfileChange('adminPasscode', e.target.value)}
+                  />
                 </div>
               </div>
 

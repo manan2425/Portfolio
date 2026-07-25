@@ -30,7 +30,7 @@ export default function AdminLoginPage() {
         localStorage.setItem('admin_authenticated', 'true');
         router.push('/admin');
       } else {
-        setError(data.message || 'Invalid passcode. Default passcode is "admin123"');
+        setError(data.message || 'Invalid passcode.');
       }
     } catch (err) {
       setError('Connection error. Please try again.');
@@ -129,7 +129,7 @@ export default function AdminLoginPage() {
               <input
                 type={showPasscode ? 'text' : 'password'}
                 required
-                placeholder="Enter passcode (Default: admin123)"
+                placeholder="Enter secret admin passcode"
                 className="form-input"
                 style={{ paddingRight: '44px' }}
                 value={passcode}
@@ -151,9 +151,6 @@ export default function AdminLoginPage() {
               >
                 {showPasscode ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
-            </div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '6px' }}>
-              Default passcode is <code style={{ background: 'var(--bg-surface)', padding: '2px 6px', borderRadius: '4px' }}>admin123</code>
             </div>
           </div>
 
