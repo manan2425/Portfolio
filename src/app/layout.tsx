@@ -2,10 +2,10 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Manan — Full Stack Engineer & Designer',
+  title: 'Manan | Full Stack Engineer & Designer',
   description: 'Personal portfolio of Manan. Crafting clean, human-centered web applications, software systems, and digital products.',
   openGraph: {
-    title: 'Manan — Portfolio',
+    title: 'Manan | Portfolio',
     description: 'Selected engineering works, projects, and crafts by Manan.',
     type: 'website',
   },

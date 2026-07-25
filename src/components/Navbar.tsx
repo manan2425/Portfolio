@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { PersonalInfo } from '@/data/portfolioData';
-import { Menu, X, Shield, ArrowUpRight, Command } from 'lucide-react';
+import { Menu, X, ArrowUpRight } from 'lucide-react';
 
 interface NavbarProps {
   personalInfo: PersonalInfo;
@@ -102,10 +102,6 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo }) => {
 
         {/* Actions */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <Link href="/admin/login" className="btn btn-secondary btn-sm" style={{ borderRadius: 'var(--radius-full)' }} title="Owner Admin Portal">
-            <Shield size={14} />
-            <span className="hide-mobile">Admin</span>
-          </Link>
           <a href="#contact" className="btn btn-primary btn-sm" style={{ borderRadius: 'var(--radius-full)' }}>
             <span>Connect</span>
             <ArrowUpRight size={14} />

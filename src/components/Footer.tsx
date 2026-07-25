@@ -37,27 +37,11 @@ export const Footer: React.FC<FooterProps> = ({ personalInfo }) => {
               {personalInfo.name} <span className="gradient-heading">Portfolio</span>
             </div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-subtle)', marginTop: '2px' }}>
-              Built with Next.js & TypeScript © {new Date().getFullYear()}
+              Built with Next.js & TypeScript <Link href="/admin/login" style={{ color: 'inherit', textDecoration: 'none', cursor: 'default' }}>©</Link> {new Date().getFullYear()}
             </div>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <Link
-              href="/admin/login"
-              style={{
-                textDecoration: 'none',
-                color: 'var(--text-muted)',
-                fontSize: '0.825rem',
-                fontWeight: 600,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px'
-              }}
-            >
-              <Shield size={13} />
-              <span>Admin Login</span>
-            </Link>
-
             <button
               onClick={scrollToTop}
               className="btn btn-secondary btn-sm"
@@ -65,7 +49,7 @@ export const Footer: React.FC<FooterProps> = ({ personalInfo }) => {
               aria-label="Back to top"
             >
               <span>Top</span>
-              <ArrowUp size={13} />
+              <ArrowUpRight size={13} style={{ transform: 'rotate(0deg)' }} />
             </button>
           </div>
         </div>

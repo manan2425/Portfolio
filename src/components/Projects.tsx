@@ -413,7 +413,7 @@ export const Projects: React.FC<ProjectsProps> = ({ projects, onSelectProject })
                         }}
                       >
                         <Lock size={10} color="#10B981" />
-                        <span>https://{project.title.toLowerCase().replace(/[^a-z0-9]/g, '-')}.app</span>
+                        <span>https://{project.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}.app</span>
                       </div>
                     </div>
 
