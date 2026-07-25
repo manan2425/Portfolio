@@ -51,11 +51,35 @@ export default function AdminDashboardPage() {
       return;
     }
 
+    const savedLocal = localStorage.getItem('portfolio_custom_data');
+    if (savedLocal) {
+      try {
+        const parsed = JSON.parse(savedLocal);
+        if (parsed && parsed.personalInfo) {
+          setData(parsed);
+        }
+      } catch (e) {}
+    }
+
     // Fetch existing portfolio data
     fetch('/api/admin/data')
       .then((res) => res.json())
       .then((fetchedData) => {
         if (fetchedData && fetchedData.personalInfo) {
+          if (savedLocal) {
+            try {
+              const parsed = JSON.parse(savedLocal);
+              setData({
+                ...fetchedData,
+                ...parsed,
+                personalInfo: {
+                  ...fetchedData.personalInfo,
+                  ...parsed.personalInfo
+                }
+              });
+              return;
+            } catch (e) {}
+          }
           setData(fetchedData);
         }
       })
@@ -72,8 +96,11 @@ export default function AdminDashboardPage() {
     setSaving(true);
     setSaveSuccess(false);
     try {
-      if (updatedData.personalInfo?.adminPasscode) {
-        localStorage.setItem('custom_admin_passcode', updatedData.personalInfo.adminPasscode);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('portfolio_custom_data', JSON.stringify(updatedData));
+        if (updatedData.personalInfo?.adminPasscode) {
+          localStorage.setItem('custom_admin_passcode', updatedData.personalInfo.adminPasscode);
+        }
       }
       const res = await fetch('/api/admin/data', {
         method: 'POST',

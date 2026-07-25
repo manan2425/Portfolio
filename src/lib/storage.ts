@@ -9,7 +9,14 @@ export function getPortfolioData(): PortfolioData {
     if (fs.existsSync(DATA_FILE_PATH)) {
       const fileContent = fs.readFileSync(DATA_FILE_PATH, 'utf-8');
       const parsed = JSON.parse(fileContent);
-      return { ...initialPortfolioData, ...parsed };
+      return {
+        ...initialPortfolioData,
+        ...parsed,
+        personalInfo: {
+          ...initialPortfolioData.personalInfo,
+          ...(parsed.personalInfo || {})
+        }
+      };
     }
   } catch (error) {
     console.error("Error reading portfolio store file:", error);

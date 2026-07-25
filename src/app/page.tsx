@@ -16,11 +16,38 @@ export default function Home() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   useEffect(() => {
-    // Fetch live data from API route
+    // 1. Check local storage persistence for instant updates
+    const savedLocalData = typeof window !== 'undefined' ? localStorage.getItem('portfolio_custom_data') : null;
+    if (savedLocalData) {
+      try {
+        const parsedLocal = JSON.parse(savedLocalData);
+        if (parsedLocal && parsedLocal.personalInfo) {
+          setData(parsedLocal);
+        }
+      } catch (e) {
+        console.error('Error parsing local portfolio data:', e);
+      }
+    }
+
+    // 2. Fetch live data from API route
     fetch('/api/admin/data')
       .then((res) => res.json())
       .then((resData) => {
         if (resData && resData.personalInfo) {
+          if (savedLocalData) {
+            try {
+              const parsedLocal = JSON.parse(savedLocalData);
+              setData({
+                ...resData,
+                ...parsedLocal,
+                personalInfo: {
+                  ...resData.personalInfo,
+                  ...parsedLocal.personalInfo
+                }
+              });
+              return;
+            } catch (e) {}
+          }
           setData(resData);
         }
       })
