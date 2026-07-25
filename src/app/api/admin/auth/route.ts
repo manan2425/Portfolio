@@ -7,7 +7,7 @@ export async function POST(request: Request) {
     const { passcode } = body;
 
     const data = getPortfolioData();
-    const validPasscode = data.personalInfo.adminPasscode || 'admin123';
+    const validPasscode = data.personalInfo.adminPasscode || 'Mananpatel@436';
 
     if (passcode === validPasscode) {
       // In production/local demo, returning a session token
