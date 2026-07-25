@@ -182,7 +182,7 @@ export default function AdminDashboardPage() {
         id: `exp-${Date.now()}`,
         role: editingExp.role || 'Software Engineer',
         company: editingExp.company || 'Company Name',
-        period: editingExp.period || '2024 - Present',
+        period: editingExp.period || '2024 to Present',
         description: editingExp.description || '',
         achievements: editingExp.achievements || []
       };
@@ -884,7 +884,7 @@ export default function AdminDashboardPage() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Time Period (e.g. 2024 - Present)</label>
+              <label className="form-label">Time Period (e.g. 2024 to Present)</label>
               <input
                 type="text"
                 className="form-input"

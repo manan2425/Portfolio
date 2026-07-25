@@ -59,7 +59,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
               <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#10B981' }}></span>
             </div>
             <span style={{ fontSize: '0.78rem', color: 'var(--text-subtle)', fontWeight: 600, fontFamily: 'monospace' }}>
-              case-study://{project.title.toLowerCase().replace(/\s+/g, '-')}
+              case-study://{project.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}
             </span>
           </div>
 

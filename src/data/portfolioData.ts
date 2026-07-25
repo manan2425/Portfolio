@@ -69,7 +69,7 @@ export const initialPortfolioData: PortfolioData = {
   projects: [
     {
       id: "proj-1",
-      title: "ShareRide - Carpooling System",
+      title: "ShareRide: Carpooling System",
       description: "An Enterprise Carpooling Platform enabling employees to find/offer rides, manage trips, track journeys in real time, and process wallet payments.",
       longDescription: "Built ShareRide, an Enterprise Carpooling Platform that enables employees to find and offer rides, manage trips and vehicles, track journeys in real time, and handle payments through an integrated wallet system. Awarded 2nd Runner-Up out of 838 teams at Odoo x KSV Hackathon 2026.",
       category: "Full Stack",
@@ -201,7 +201,7 @@ export const initialPortfolioData: PortfolioData = {
     {
       id: "exp-3",
       role: "Summer Intern (Machine Learning)",
-      company: "Ural Federal University (UrFU - Yekaterinburg, Russia)",
+      company: "Ural Federal University (UrFU, Yekaterinburg, Russia)",
       period: "July 2025 – Aug 2025",
       description: "Participated in an international Summer Internship program at Ural Federal University in Russia.",
       achievements: [
