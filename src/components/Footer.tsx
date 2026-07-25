@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { PersonalInfo } from '@/data/portfolioData';
-import { ArrowUp, Shield } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 
 interface FooterProps {
   personalInfo: PersonalInfo;
@@ -49,7 +49,7 @@ export const Footer: React.FC<FooterProps> = ({ personalInfo }) => {
               aria-label="Back to top"
             >
               <span>Top</span>
-              <ArrowUpRight size={13} style={{ transform: 'rotate(0deg)' }} />
+              <ArrowUp size={13} />
             </button>
           </div>
         </div>
