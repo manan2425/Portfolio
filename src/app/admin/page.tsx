@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { PortfolioData, Project, Skill, Experience, initialPortfolioData } from '@/data/portfolioData';
+import { PortfolioData, Project, Skill, Experience, Achievement, initialPortfolioData } from '@/data/portfolioData';
 import {
   Shield,
   LayoutDashboard,
@@ -20,7 +20,12 @@ import {
   CheckCircle2,
   X,
   Code2,
-  Star
+  Star,
+  Trophy,
+  GripVertical,
+  ArrowUp,
+  ArrowDown,
+  Award
 } from 'lucide-react';
 
 export default function AdminDashboardPage() {
@@ -28,7 +33,7 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'projects' | 'skills' | 'experience' | 'profile'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'projects' | 'skills' | 'experience' | 'achievements' | 'profile'>('overview');
 
   // Modal / Form state for Projects
   const [editingProject, setEditingProject] = useState<Partial<Project> | null>(null);
@@ -41,6 +46,14 @@ export default function AdminDashboardPage() {
   // Form state for Experience
   const [editingExp, setEditingExp] = useState<Partial<Experience> | null>(null);
   const [isExpModalOpen, setIsExpModalOpen] = useState(false);
+
+  // Form state for Achievements
+  const [editingAch, setEditingAch] = useState<Partial<Achievement> | null>(null);
+  const [isAchModalOpen, setIsAchModalOpen] = useState(false);
+
+  // Drag and drop state
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dragType, setDragType] = useState<'projects' | 'skills' | 'experience' | 'achievements' | null>(null);
 
   const router = useRouter();
 
@@ -55,10 +68,14 @@ export default function AdminDashboardPage() {
     if (savedLocal) {
       try {
         const parsed = JSON.parse(savedLocal);
-        if (parsed && parsed.personalInfo) {
+        if (parsed && Array.isArray(parsed.experience) && parsed.experience.length < initialPortfolioData.experience.length) {
+          localStorage.removeItem('portfolio_custom_data');
+        } else if (parsed && parsed.personalInfo) {
           setData(parsed);
         }
-      } catch (e) {}
+      } catch (e) {
+        localStorage.removeItem('portfolio_custom_data');
+      }
     }
 
     // Fetch existing portfolio data
@@ -66,21 +83,16 @@ export default function AdminDashboardPage() {
       .then((res) => res.json())
       .then((fetchedData) => {
         if (fetchedData && fetchedData.personalInfo) {
-          if (savedLocal) {
-            try {
-              const parsed = JSON.parse(savedLocal);
-              setData({
-                ...fetchedData,
-                ...parsed,
-                personalInfo: {
-                  ...fetchedData.personalInfo,
-                  ...parsed.personalInfo
-                }
-              });
-              return;
-            } catch (e) {}
+          if (fetchedData.experience && fetchedData.experience.length >= initialPortfolioData.experience.length) {
+            setData(fetchedData);
+          } else {
+            setData({
+              ...initialPortfolioData,
+              ...fetchedData,
+              experience: initialPortfolioData.experience,
+              achievements: initialPortfolioData.achievements
+            });
           }
-          setData(fetchedData);
         }
       })
       .catch((err) => console.log('Loaded default admin state:', err))
@@ -118,18 +130,60 @@ export default function AdminDashboardPage() {
     }
   };
 
+  /* Helper for reordering items */
+  const moveItemInArray = <T,>(arr: T[], from: number, to: number): T[] => {
+    if (to < 0 || to >= arr.length) return arr;
+    const copy = [...arr];
+    const [moved] = copy.splice(from, 1);
+    copy.splice(to, 0, moved);
+    return copy;
+  };
+
+  const handleMove = (type: 'projects' | 'skills' | 'experience' | 'achievements', fromIdx: number, toIdx: number) => {
+    let newData = { ...data };
+    if (type === 'projects') {
+      newData.projects = moveItemInArray(data.projects, fromIdx, toIdx);
+    } else if (type === 'skills') {
+      newData.skills = moveItemInArray(data.skills, fromIdx, toIdx);
+    } else if (type === 'experience') {
+      newData.experience = moveItemInArray(data.experience, fromIdx, toIdx);
+    } else if (type === 'achievements') {
+      newData.achievements = moveItemInArray(data.achievements || [], fromIdx, toIdx);
+    }
+    setData(newData);
+    handleSaveAll(newData);
+  };
+
+  const handleDragStart = (type: 'projects' | 'skills' | 'experience' | 'achievements', index: number) => {
+    setDragType(type);
+    setDraggedIndex(index);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (type: 'projects' | 'skills' | 'experience' | 'achievements', targetIndex: number) => {
+    if (draggedIndex === null || dragType !== type || draggedIndex === targetIndex) {
+      setDraggedIndex(null);
+      setDragType(null);
+      return;
+    }
+    handleMove(type, draggedIndex, targetIndex);
+    setDraggedIndex(null);
+    setDragType(null);
+  };
+
   /* Project Handlers */
   const handleSaveProject = () => {
     if (!editingProject?.title) return;
     let updatedProjects = [...data.projects];
 
     if (editingProject.id) {
-      // Edit existing
       updatedProjects = updatedProjects.map((p) =>
         p.id === editingProject.id ? ({ ...p, ...editingProject } as Project) : p
       );
     } else {
-      // Add new
       const newProj: Project = {
         id: `proj-${Date.now()}`,
         title: editingProject.title || 'New Project',
@@ -213,6 +267,7 @@ export default function AdminDashboardPage() {
         role: editingExp.role || 'Software Engineer',
         company: editingExp.company || 'Company Name',
         period: editingExp.period || '2024 to Present',
+        category: editingExp.category || 'College Leadership',
         description: editingExp.description || '',
         achievements: editingExp.achievements || []
       };
@@ -230,6 +285,44 @@ export default function AdminDashboardPage() {
     if (confirm('Delete this work experience entry?')) {
       const updatedExp = data.experience.filter((e) => e.id !== id);
       const newData = { ...data, experience: updatedExp };
+      setData(newData);
+      handleSaveAll(newData);
+    }
+  };
+
+  /* Achievement Handlers */
+  const handleSaveAch = () => {
+    if (!editingAch?.title) return;
+    let updatedAch = [...(data.achievements || [])];
+
+    if (editingAch.id) {
+      updatedAch = updatedAch.map((a) =>
+        a.id === editingAch.id ? ({ ...a, ...editingAch } as Achievement) : a
+      );
+    } else {
+      const newA: Achievement = {
+        id: `ach-${Date.now()}`,
+        title: editingAch.title || 'New Achievement',
+        event: editingAch.event || 'Hackathon / Competition',
+        period: editingAch.period || '2026',
+        description: editingAch.description || '',
+        prize: editingAch.prize || '',
+        badge: editingAch.badge || 'Winner'
+      };
+      updatedAch.unshift(newA);
+    }
+
+    const newData = { ...data, achievements: updatedAch };
+    setData(newData);
+    setIsAchModalOpen(false);
+    setEditingAch(null);
+    handleSaveAll(newData);
+  };
+
+  const handleDeleteAch = (id: string) => {
+    if (confirm('Delete this achievement?')) {
+      const updatedAch = (data.achievements || []).filter((a) => a.id !== id);
+      const newData = { ...data, achievements: updatedAch };
       setData(newData);
       handleSaveAll(newData);
     }
@@ -314,7 +407,7 @@ export default function AdminDashboardPage() {
       {/* Main Admin Area */}
       <div className="container" style={{ flex: 1, padding: '32px 24px', display: 'flex', gap: '32px' }}>
         {/* Admin Sidebar Navigation */}
-        <aside style={{ width: '240px', flexShrink: 0 }}>
+        <aside style={{ width: '250px', flexShrink: 0 }}>
           <div
             className="glass-card"
             style={{
@@ -331,6 +424,7 @@ export default function AdminDashboardPage() {
               { id: 'projects', label: 'Projects', icon: FolderPlus, count: data.projects.length },
               { id: 'skills', label: 'Skills', icon: Cpu, count: data.skills.length },
               { id: 'experience', label: 'Experience', icon: Briefcase, count: data.experience.length },
+              { id: 'achievements', label: 'Achievements', icon: Trophy, count: (data.achievements || []).length },
               { id: 'profile', label: 'Profile & Bio', icon: User },
             ].map((tab) => {
               const Icon = tab.icon;
@@ -388,8 +482,8 @@ export default function AdminDashboardPage() {
                 {[
                   { title: 'Total Projects', value: data.projects.length, sub: `${data.projects.filter(p => p.featured).length} Featured`, icon: FolderPlus },
                   { title: 'Technical Skills', value: data.skills.length, sub: 'Across 4 Domains', icon: Cpu },
-                  { title: 'Experience Roles', value: data.experience.length, sub: 'Milestones & Companies', icon: Briefcase },
-                  { title: 'Availability Status', value: data.personalInfo.isAvailable ? 'Open to Work' : 'Unavailable', sub: data.personalInfo.location, icon: User },
+                  { title: 'Experience Roles', value: data.experience.length, sub: 'Work & College Leadership', icon: Briefcase },
+                  { title: 'Achievements', value: (data.achievements || []).length, sub: 'Hackathon Wins & Awards', icon: Trophy },
                 ].map((stat, idx) => {
                   const Icon = stat.icon;
                   return (
@@ -408,16 +502,19 @@ export default function AdminDashboardPage() {
               </div>
 
               <div className="glass-card" style={{ padding: '28px', background: '#FFFFFF' }}>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '12px' }}>Quick Actions & Management</h3>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '12px' }}>Quick Actions & Drag-and-Drop Management</h3>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem', marginBottom: '20px' }}>
-                  Use the navigation tabs on the left to add new portfolio entries, edit your bio, update your technical skills, or update your social links.
+                  Use the navigation tabs on the left to add, edit, delete, or <strong>drag and drop to reorder</strong> projects, skills, college roles, and achievements.
                 </p>
-                <div style={{ display: 'flex', gap: '12px' }}>
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                   <button onClick={() => { setActiveTab('projects'); setEditingProject({}); setIsProjectModalOpen(true); }} className="btn btn-primary btn-sm">
-                    <Plus size={16} /> Add New Project
+                    <Plus size={16} /> Add Project
                   </button>
-                  <button onClick={() => { setActiveTab('skills'); setEditingSkill({}); setIsSkillModalOpen(true); }} className="btn btn-secondary btn-sm">
-                    <Plus size={16} /> Add Skill
+                  <button onClick={() => { setActiveTab('experience'); setEditingExp({}); setIsExpModalOpen(true); }} className="btn btn-secondary btn-sm">
+                    <Plus size={16} /> Add Experience / College Role
+                  </button>
+                  <button onClick={() => { setActiveTab('achievements'); setEditingAch({}); setIsAchModalOpen(true); }} className="btn btn-secondary btn-sm">
+                    <Plus size={16} /> Add Achievement
                   </button>
                 </div>
               </div>
@@ -428,16 +525,23 @@ export default function AdminDashboardPage() {
           {activeTab === 'projects' && (
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Manage Projects</h2>
+                <div>
+                  <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Manage Projects</h2>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Drag items or use arrow buttons to reorder display position.</span>
+                </div>
                 <button onClick={() => { setEditingProject({}); setIsProjectModalOpen(true); }} className="btn btn-primary btn-sm">
                   <Plus size={16} /> Add Project
                 </button>
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                {data.projects.map((proj) => (
+                {data.projects.map((proj, idx) => (
                   <div
                     key={proj.id}
+                    draggable
+                    onDragStart={() => handleDragStart('projects', idx)}
+                    onDragOver={handleDragOver}
+                    onDrop={() => handleDrop('projects', idx)}
                     className="glass-card"
                     style={{
                       padding: '20px',
@@ -445,17 +549,21 @@ export default function AdminDashboardPage() {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                      gap: '20px'
+                      gap: '16px',
+                      borderLeft: '4px solid var(--accent-blue)',
+                      opacity: draggedIndex === idx && dragType === 'projects' ? 0.4 : 1,
+                      cursor: 'grab'
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: 1 }}>
+                      <GripVertical size={20} color="var(--text-muted)" style={{ cursor: 'grab', flexShrink: 0 }} />
                       <img
                         src={proj.image}
                         alt={proj.title}
                         style={{ width: '60px', height: '60px', borderRadius: 'var(--radius-sm)', objectFit: 'cover', background: 'var(--bg-surface)' }}
                       />
                       <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
                           <span style={{ fontWeight: 800, fontSize: '1.05rem', color: 'var(--text-primary)' }}>{proj.title}</span>
                           {proj.featured && (
                             <span className="pill-badge" style={{ fontSize: '0.65rem', padding: '2px 6px' }}>
@@ -466,13 +574,31 @@ export default function AdminDashboardPage() {
                             {proj.category}
                           </span>
                         </div>
-                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, maxLines: 1 }}>
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>
                           {proj.description}
                         </p>
                       </div>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <button
+                        onClick={() => handleMove('projects', idx, idx - 1)}
+                        disabled={idx === 0}
+                        className="btn btn-secondary btn-sm"
+                        style={{ padding: '6px 8px', opacity: idx === 0 ? 0.3 : 1 }}
+                        title="Move Up"
+                      >
+                        <ArrowUp size={14} />
+                      </button>
+                      <button
+                        onClick={() => handleMove('projects', idx, idx + 1)}
+                        disabled={idx === data.projects.length - 1}
+                        className="btn btn-secondary btn-sm"
+                        style={{ padding: '6px 8px', opacity: idx === data.projects.length - 1 ? 0.3 : 1 }}
+                        title="Move Down"
+                      >
+                        <ArrowDown size={14} />
+                      </button>
                       <button
                         onClick={() => { setEditingProject(proj); setIsProjectModalOpen(true); }}
                         className="btn btn-secondary btn-sm"
@@ -499,22 +625,63 @@ export default function AdminDashboardPage() {
           {activeTab === 'skills' && (
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Manage Technical Skills</h2>
+                <div>
+                  <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Manage Technical Skills</h2>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Drag items or use arrow buttons to reorder display position.</span>
+                </div>
                 <button onClick={() => { setEditingSkill({}); setIsSkillModalOpen(true); }} className="btn btn-primary btn-sm">
                   <Plus size={16} /> Add Skill
                 </button>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '16px' }}>
-                {data.skills.map((skill) => (
-                  <div key={skill.id} className="glass-card" style={{ padding: '16px', background: '#FFFFFF', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div>
-                      <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-primary)' }}>{skill.name}</div>
-                      <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                        {skill.category} • {skill.level}%
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {data.skills.map((skill, idx) => (
+                  <div
+                    key={skill.id}
+                    draggable
+                    onDragStart={() => handleDragStart('skills', idx)}
+                    onDragOver={handleDragOver}
+                    onDrop={() => handleDrop('skills', idx)}
+                    className="glass-card"
+                    style={{
+                      padding: '14px 20px',
+                      background: '#FFFFFF',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      cursor: 'grab',
+                      opacity: draggedIndex === idx && dragType === 'skills' ? 0.4 : 1
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <GripVertical size={18} color="var(--text-muted)" style={{ cursor: 'grab' }} />
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-primary)' }}>{skill.name}</div>
+                        <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                          {skill.category} • {skill.level}%
+                        </div>
                       </div>
                     </div>
-                    <div style={{ display: 'flex', gap: '4px' }}>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <button
+                        onClick={() => handleMove('skills', idx, idx - 1)}
+                        disabled={idx === 0}
+                        className="btn btn-secondary btn-sm"
+                        style={{ padding: '6px', opacity: idx === 0 ? 0.3 : 1 }}
+                        title="Move Up"
+                      >
+                        <ArrowUp size={14} />
+                      </button>
+                      <button
+                        onClick={() => handleMove('skills', idx, idx + 1)}
+                        disabled={idx === data.skills.length - 1}
+                        className="btn btn-secondary btn-sm"
+                        style={{ padding: '6px', opacity: idx === data.skills.length - 1 ? 0.3 : 1 }}
+                        title="Move Down"
+                      >
+                        <ArrowDown size={14} />
+                      </button>
                       <button onClick={() => { setEditingSkill(skill); setIsSkillModalOpen(true); }} className="btn btn-secondary btn-sm" style={{ padding: '6px' }}>
                         <Edit2 size={14} />
                       </button>
@@ -528,27 +695,84 @@ export default function AdminDashboardPage() {
             </div>
           )}
 
-          {/* TAB 4: EXPERIENCE */}
+          {/* TAB 4: EXPERIENCE & COLLEGE ROLES */}
           {activeTab === 'experience' && (
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Manage Experience</h2>
+                <div>
+                  <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Manage Experience & College Roles</h2>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Drag items or use arrow buttons to reorder display position.</span>
+                </div>
                 <button onClick={() => { setEditingExp({}); setIsExpModalOpen(true); }} className="btn btn-primary btn-sm">
-                  <Plus size={16} /> Add Experience
+                  <Plus size={16} /> Add Experience / Role
                 </button>
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                {data.experience.map((exp) => (
-                  <div key={exp.id} className="glass-card" style={{ padding: '20px', background: '#FFFFFF', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                    <div>
-                      <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)' }}>{exp.role}</h3>
-                      <div style={{ fontSize: '0.9rem', color: 'var(--accent-primary)', fontWeight: 600, marginBottom: '6px' }}>
-                        {exp.company} ({exp.period})
+                {data.experience.map((exp, idx) => (
+                  <div
+                    key={exp.id || idx}
+                    draggable
+                    onDragStart={() => handleDragStart('experience', idx)}
+                    onDragOver={handleDragOver}
+                    onDrop={() => handleDrop('experience', idx)}
+                    className="glass-card"
+                    style={{
+                      padding: '20px',
+                      background: '#FFFFFF',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                      gap: '16px',
+                      cursor: 'grab',
+                      opacity: draggedIndex === idx && dragType === 'experience' ? 0.4 : 1,
+                      borderLeft: `4px solid ${exp.category === 'Work & Internships' ? 'var(--accent-blue)' : '#F59E0B'}`
+                    }}
+                  >
+                    <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', flex: 1 }}>
+                      <GripVertical size={20} color="var(--text-muted)" style={{ cursor: 'grab', marginTop: '4px' }} />
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '4px' }}>
+                          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)' }}>{exp.role}</h3>
+                          <span
+                            style={{
+                              fontSize: '0.72rem',
+                              fontWeight: 700,
+                              padding: '2px 8px',
+                              borderRadius: 'var(--radius-full)',
+                              backgroundColor: exp.category === 'Work & Internships' ? 'var(--accent-blue-light)' : 'rgba(245, 158, 11, 0.12)',
+                              color: exp.category === 'Work & Internships' ? 'var(--accent-blue)' : '#D97706'
+                            }}
+                          >
+                            {exp.category || 'College Leadership'}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: '0.9rem', color: 'var(--accent-primary)', fontWeight: 600, marginBottom: '6px' }}>
+                          {exp.company} ({exp.period})
+                        </div>
+                        <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>{exp.description}</p>
                       </div>
-                      <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>{exp.description}</p>
                     </div>
-                    <div style={{ display: 'flex', gap: '8px' }}>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <button
+                        onClick={() => handleMove('experience', idx, idx - 1)}
+                        disabled={idx === 0}
+                        className="btn btn-secondary btn-sm"
+                        style={{ padding: '6px', opacity: idx === 0 ? 0.3 : 1 }}
+                        title="Move Up"
+                      >
+                        <ArrowUp size={14} />
+                      </button>
+                      <button
+                        onClick={() => handleMove('experience', idx, idx + 1)}
+                        disabled={idx === data.experience.length - 1}
+                        className="btn btn-secondary btn-sm"
+                        style={{ padding: '6px', opacity: idx === data.experience.length - 1 ? 0.3 : 1 }}
+                        title="Move Down"
+                      >
+                        <ArrowDown size={14} />
+                      </button>
                       <button onClick={() => { setEditingExp(exp); setIsExpModalOpen(true); }} className="btn btn-secondary btn-sm">
                         <Edit2 size={16} />
                       </button>
@@ -562,7 +786,105 @@ export default function AdminDashboardPage() {
             </div>
           )}
 
-          {/* TAB 5: PROFILE */}
+          {/* TAB 5: ACHIEVEMENTS */}
+          {activeTab === 'achievements' && (
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                <div>
+                  <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Manage Achievements & Awards</h2>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Drag items or use arrow buttons to reorder display position.</span>
+                </div>
+                <button onClick={() => { setEditingAch({}); setIsAchModalOpen(true); }} className="btn btn-primary btn-sm">
+                  <Plus size={16} /> Add Achievement
+                </button>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {(data.achievements || []).map((ach, idx) => (
+                  <div
+                    key={ach.id || idx}
+                    draggable
+                    onDragStart={() => handleDragStart('achievements', idx)}
+                    onDragOver={handleDragOver}
+                    onDrop={() => handleDrop('achievements', idx)}
+                    className="glass-card"
+                    style={{
+                      padding: '20px',
+                      background: '#FFFFFF',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                      gap: '16px',
+                      cursor: 'grab',
+                      opacity: draggedIndex === idx && dragType === 'achievements' ? 0.4 : 1,
+                      borderLeft: '4px solid #10B981'
+                    }}
+                  >
+                    <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', flex: 1 }}>
+                      <GripVertical size={20} color="var(--text-muted)" style={{ cursor: 'grab', marginTop: '4px' }} />
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '4px' }}>
+                          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)' }}>{ach.title}</h3>
+                          {ach.badge && (
+                            <span
+                              style={{
+                                fontSize: '0.72rem',
+                                fontWeight: 800,
+                                padding: '2px 8px',
+                                borderRadius: 'var(--radius-full)',
+                                backgroundColor: '#10B981',
+                                color: '#FFFFFF'
+                              }}
+                            >
+                              {ach.badge}
+                            </span>
+                          )}
+                        </div>
+                        <div style={{ fontSize: '0.9rem', color: 'var(--accent-primary)', fontWeight: 600, marginBottom: '6px' }}>
+                          {ach.event} ({ach.period})
+                        </div>
+                        <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '6px' }}>{ach.description}</p>
+                        {ach.prize && (
+                          <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#D97706' }}>
+                            🏆 Prize: {ach.prize}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <button
+                        onClick={() => handleMove('achievements', idx, idx - 1)}
+                        disabled={idx === 0}
+                        className="btn btn-secondary btn-sm"
+                        style={{ padding: '6px', opacity: idx === 0 ? 0.3 : 1 }}
+                        title="Move Up"
+                      >
+                        <ArrowUp size={14} />
+                      </button>
+                      <button
+                        onClick={() => handleMove('achievements', idx, idx + 1)}
+                        disabled={idx === (data.achievements || []).length - 1}
+                        className="btn btn-secondary btn-sm"
+                        style={{ padding: '6px', opacity: idx === (data.achievements || []).length - 1 ? 0.3 : 1 }}
+                        title="Move Down"
+                      >
+                        <ArrowDown size={14} />
+                      </button>
+                      <button onClick={() => { setEditingAch(ach); setIsAchModalOpen(true); }} className="btn btn-secondary btn-sm">
+                        <Edit2 size={16} />
+                      </button>
+                      <button onClick={() => handleDeleteAch(ach.id)} className="btn btn-secondary btn-sm" style={{ color: '#DC2626' }}>
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 6: PROFILE */}
           {activeTab === 'profile' && (
             <div className="glass-card" style={{ padding: '32px', background: '#FFFFFF' }}>
               <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '24px' }}>Personal Profile & Passcode</h2>
@@ -990,12 +1312,12 @@ export default function AdminDashboardPage() {
         <div className="modal-overlay" onClick={() => setIsExpModalOpen(false)}>
           <div
             className="glass-card"
-            style={{ maxWidth: '520px', width: '100%', padding: '32px', background: '#FFFFFF' }}
+            style={{ maxWidth: '560px', width: '100%', padding: '32px', background: '#FFFFFF' }}
             onClick={(e) => e.stopPropagation()}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
               <h3 style={{ fontSize: '1.3rem', fontWeight: 800 }}>
-                {editingExp?.id ? 'Edit Experience' : 'Add Experience'}
+                {editingExp?.id ? 'Edit Experience / College Role' : 'Add Experience / College Role'}
               </h3>
               <button onClick={() => setIsExpModalOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
                 <X size={20} />
@@ -1003,7 +1325,7 @@ export default function AdminDashboardPage() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Role Title</label>
+              <label className="form-label">Role Title (e.g. General Secretary / Developer Head)</label>
               <input
                 type="text"
                 className="form-input"
@@ -1013,7 +1335,7 @@ export default function AdminDashboardPage() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Company / Organization</label>
+              <label className="form-label">Organization / College / Company</label>
               <input
                 type="text"
                 className="form-input"
@@ -1023,7 +1345,19 @@ export default function AdminDashboardPage() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Time Period (e.g. 2024 to Present)</label>
+              <label className="form-label">Category</label>
+              <select
+                className="form-select"
+                value={editingExp?.category || 'College Leadership'}
+                onChange={(e) => setEditingExp({ ...editingExp, category: e.target.value as any })}
+              >
+                <option value="College Leadership">College Leadership & Student Chapters</option>
+                <option value="Work & Internships">Work & Internships</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Time Period (e.g. July 2025 to June 2026)</label>
               <input
                 type="text"
                 className="form-input"
@@ -1044,9 +1378,100 @@ export default function AdminDashboardPage() {
 
             <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
               <button onClick={handleSaveExp} className="btn btn-primary" style={{ flex: 1 }}>
-                Save Experience
+                Save Role
               </button>
               <button onClick={() => setIsExpModalOpen(false)} className="btn btn-secondary">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ACHIEVEMENT EDIT MODAL */}
+      {isAchModalOpen && (
+        <div className="modal-overlay" onClick={() => setIsAchModalOpen(false)}>
+          <div
+            className="glass-card"
+            style={{ maxWidth: '540px', width: '100%', padding: '32px', background: '#FFFFFF' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h3 style={{ fontSize: '1.3rem', fontWeight: 800 }}>
+                {editingAch?.id ? 'Edit Achievement' : 'Add Achievement'}
+              </h3>
+              <button onClick={() => setIsAchModalOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Achievement Title (e.g. 2nd Runner Up & Won ₹75k Prize)</label>
+              <input
+                type="text"
+                className="form-input"
+                value={editingAch?.title || ''}
+                onChange={(e) => setEditingAch({ ...editingAch, title: e.target.value })}
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Event / Competition Name (e.g. Odoo X KSV 2026 Hackathon)</label>
+              <input
+                type="text"
+                className="form-input"
+                value={editingAch?.event || ''}
+                onChange={(e) => setEditingAch({ ...editingAch, event: e.target.value })}
+              />
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div className="form-group">
+                <label className="form-label">Year / Period (e.g. 2026)</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={editingAch?.period || ''}
+                  onChange={(e) => setEditingAch({ ...editingAch, period: e.target.value })}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Badge Tag (e.g. 2nd Runner-Up / Finalist)</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={editingAch?.badge || ''}
+                  onChange={(e) => setEditingAch({ ...editingAch, badge: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Prize / Recognition (e.g. ₹75,000 Cash Prize)</label>
+              <input
+                type="text"
+                className="form-input"
+                value={editingAch?.prize || ''}
+                onChange={(e) => setEditingAch({ ...editingAch, prize: e.target.value })}
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Description / Summary</label>
+              <textarea
+                rows={3}
+                className="form-textarea"
+                value={editingAch?.description || ''}
+                onChange={(e) => setEditingAch({ ...editingAch, description: e.target.value })}
+              />
+            </div>
+
+            <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
+              <button onClick={handleSaveAch} className="btn btn-primary" style={{ flex: 1 }}>
+                Save Achievement
+              </button>
+              <button onClick={() => setIsAchModalOpen(false)} className="btn btn-secondary">
                 Cancel
               </button>
             </div>

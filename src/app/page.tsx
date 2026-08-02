@@ -17,43 +17,42 @@ export default function Home() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   useEffect(() => {
-    // 1. Check local storage persistence for instant updates
-    const savedLocalData = typeof window !== 'undefined' ? localStorage.getItem('portfolio_custom_data') : null;
-    if (savedLocalData) {
-      try {
-        const parsedLocal = JSON.parse(savedLocalData);
-        if (parsedLocal && parsedLocal.personalInfo) {
-          setData(parsedLocal);
+    // Clear stale cached local storage if it has outdated data
+    if (typeof window !== 'undefined') {
+      const savedLocalData = localStorage.getItem('portfolio_custom_data');
+      if (savedLocalData) {
+        try {
+          const parsed = JSON.parse(savedLocalData);
+          if (!parsed.experience || parsed.experience.length < initialPortfolioData.experience.length) {
+            localStorage.removeItem('portfolio_custom_data');
+          }
+        } catch (e) {
+          localStorage.removeItem('portfolio_custom_data');
         }
-      } catch (e) {
-        console.error('Error parsing local portfolio data:', e);
       }
     }
 
-    // 2. Fetch live data from API route
+    // Fetch live data from API route
     fetch('/api/admin/data')
       .then((res) => res.json())
       .then((resData) => {
         if (resData && resData.personalInfo) {
-          if (savedLocalData) {
-            try {
-              const parsedLocal = JSON.parse(savedLocalData);
-              setData({
-                ...resData,
-                ...parsedLocal,
-                personalInfo: {
-                  ...resData.personalInfo,
-                  ...parsedLocal.personalInfo
-                }
-              });
-              return;
-            } catch (e) {}
+          // If server data has experience & achievements, use it directly
+          if (resData.experience && resData.experience.length >= initialPortfolioData.experience.length) {
+            setData(resData);
+          } else {
+            setData({
+              ...initialPortfolioData,
+              ...resData,
+              experience: initialPortfolioData.experience,
+              achievements: initialPortfolioData.achievements
+            });
           }
-          setData(resData);
         }
       })
       .catch((err) => {
         console.log('Using initial portfolio data fallback:', err);
+        setData(initialPortfolioData);
       });
   }, []);
 
@@ -63,8 +62,8 @@ export default function Home() {
       <Hero personalInfo={data.personalInfo} />
       <Projects projects={data.projects} onSelectProject={(p) => setSelectedProject(p)} />
       <Skills skills={data.skills} />
-      <Experience experience={data.experience} />
-      <Achievements achievements={data.achievements} />
+      <Experience experience={data.experience && data.experience.length > 0 ? data.experience : initialPortfolioData.experience} />
+      <Achievements achievements={data.achievements && data.achievements.length > 0 ? data.achievements : initialPortfolioData.achievements} />
       <Contact personalInfo={data.personalInfo} />
       <Footer personalInfo={data.personalInfo} />
 
