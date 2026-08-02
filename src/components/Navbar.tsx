@@ -25,6 +25,7 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo }) => {
     { name: 'Projects', href: '#projects' },
     { name: 'Stack', href: '#skills' },
     { name: 'Experience', href: '#experience' },
+    { name: 'Achievements', href: '#achievements' },
     { name: 'Contact', href: '#contact' },
   ];
 

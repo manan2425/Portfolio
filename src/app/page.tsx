@@ -8,6 +8,7 @@ import { Projects } from '@/components/Projects';
 import { ProjectModal } from '@/components/ProjectModal';
 import { Skills } from '@/components/Skills';
 import { Experience } from '@/components/Experience';
+import { Achievements } from '@/components/Achievements';
 import { Contact } from '@/components/Contact';
 import { Footer } from '@/components/Footer';
 
@@ -63,6 +64,7 @@ export default function Home() {
       <Projects projects={data.projects} onSelectProject={(p) => setSelectedProject(p)} />
       <Skills skills={data.skills} />
       <Experience experience={data.experience} />
+      <Achievements achievements={data.achievements} />
       <Contact personalInfo={data.personalInfo} />
       <Footer personalInfo={data.personalInfo} />
 

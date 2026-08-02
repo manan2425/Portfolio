@@ -231,6 +231,7 @@
       "role": "Full Semester External Project Intern",
       "company": "Elecon Engineering Company Limited (Anand, Gujarat)",
       "period": "Jan 2026 – May 2026",
+      "category": "Work & Internships",
       "description": "Completed the FSEP (Final Semester Engineering Project) program at Elecon Engineering Company Limited.",
       "achievements": [
         "Gained hands-on industrial engineering experience and professional software execution exposure",
@@ -242,6 +243,7 @@
       "role": "Project Intern (AI/ML & Full Stack)",
       "company": "Helius Wellness (Ahmedabad, Gujarat)",
       "period": "July 2025 – Dec 2025",
+      "category": "Work & Internships",
       "description": "Completed a project internship at Helius Wellness focusing on web platform engineering and intelligent features.",
       "achievements": [
         "Gained practical experience in AI/ML model integration and Full Stack web application development",
@@ -253,6 +255,7 @@
       "role": "Summer Intern (Machine Learning)",
       "company": "Ural Federal University (UrFU, Yekaterinburg, Russia)",
       "period": "July 2025 – Aug 2025",
+      "category": "Work & Internships",
       "description": "Participated in an international Summer Internship program at Ural Federal University in Russia.",
       "achievements": [
         "Focused on Machine Learning concepts, algorithms, and practical applications",
@@ -264,11 +267,170 @@
       "role": "Summer Intern (Web Engineering)",
       "company": "Tech Elecon Pvt. Ltd. (Anand, Gujarat)",
       "period": "May 2025 – June 2025",
+      "category": "Work & Internships",
       "description": "Developed web analytics dashboards and responsive frontend user interfaces.",
       "achievements": [
         "Developed a Dynamic Analytical Dashboard Website for different product lines and categories",
         "Engineered responsive and interactive UI components using HTML, CSS, and JavaScript with cross-browser reliability"
       ]
+    },
+    {
+      "id": "exp-5",
+      "role": "General Secretary",
+      "company": "BVM Central Committee (Birla Vishvakarma Mahavidyalaya)",
+      "period": "July 2025 – June 2026",
+      "category": "College Leadership",
+      "description": "Elected General Secretary heading the BVM Central Committee, managing overall campus student activities, governance, and institutional events.",
+      "achievements": [
+        "Coordinated major institute-wide events, technical symposiums, and student activity councils",
+        "Facilitated effective communication between the student body, faculty heads, and administration"
+      ]
+    },
+    {
+      "id": "exp-6",
+      "role": "Treasurer",
+      "company": "The Space Association Student Chapter (TSASC BVM)",
+      "period": "April 2026 – July 2026",
+      "category": "College Leadership",
+      "description": "Managed financial budgeting, fund allocations, and accounting records for space and astronomy chapter initiatives.",
+      "achievements": [
+        "Supervised event budget planning and financial allocations for student chapter activities",
+        "Maintained transparent financial audit records and resource management"
+      ]
+    },
+    {
+      "id": "exp-7",
+      "role": "Developer Head",
+      "company": "BVM Central Committee",
+      "period": "Oct 2024 – July 2025",
+      "category": "College Leadership",
+      "description": "Spearheaded web development initiatives and digital management portals for BVM Central Committee campus operations.",
+      "achievements": [
+        "Led developer teams to build official campus event web portals and student management systems",
+        "Ensured high availability, responsive designs, and secure data workflows"
+      ]
+    },
+    {
+      "id": "exp-8",
+      "role": "Chairperson / Student Coordinator",
+      "company": "SSIP 2.0 BVM SB (Student Start-up & Innovation Policy)",
+      "period": "Sep 2024 – Aug 2025",
+      "category": "College Leadership",
+      "description": "Guided student innovation, start-up initiatives, and prototype grant proposals under Gujarat SSIP 2.0.",
+      "achievements": [
+        "Promoted student innovation by organizing mentorship sessions, hackathons, and funding guidance",
+        "Supported student project teams from initial ideation to prototype development stage"
+      ]
+    },
+    {
+      "id": "exp-9",
+      "role": "Chairperson",
+      "company": "BYTE Club (BVM)",
+      "period": "Feb 2024 – Aug 2025",
+      "category": "College Leadership",
+      "description": "Led BYTE (Building Youth Through Engineering) Club, organizing coding bootcamps, workshops, and competitive hackathons.",
+      "achievements": [
+        "Directed overall club operations, technical workshops, and competitive programming contests",
+        "Mentored junior developers in web technologies, data structures, and software fundamentals"
+      ]
+    },
+    {
+      "id": "exp-10",
+      "role": "Developer Head",
+      "company": "The Space Association Student Chapter (TSASC BVM)",
+      "period": "Apr 2024 – Apr 2025",
+      "category": "College Leadership",
+      "description": "Led technical web development projects and digital infrastructure for the Space Association student chapter.",
+      achievements: [
+        "Managed technical project teams and built chapter web presence",
+        "Created interactive web portals for space science events and student registrations"
+      ]
+    },
+    {
+      "id": "exp-11",
+      "role": "Developer Head",
+      "company": "IEEE BVM Student Branch",
+      "period": "Jan 2024 – Jan 2025",
+      "category": "College Leadership",
+      "description": "Led web development and technical initiatives for IEEE BVM SB during an award-winning term.",
+      achievements: [
+        "Won BEST Student Chapter at Nirma University organized by IEEE Gujarat Section",
+        "Architected and managed official IEEE BVM SB web applications and event platforms"
+      ]
+    },
+    {
+      "id": "exp-12",
+      "role": "Technical Lead",
+      "company": "ML Club BVM",
+      "period": "Jan 2024 – Jan 2025",
+      "category": "College Leadership",
+      "description": "Led machine learning workshops, AI research projects, and hands-on developer bootcamps.",
+      achievements: [
+        "Organized hands-on AI/ML bootcamps and guided student project research",
+        "Taught machine learning algorithms, Python data science libraries, and model deployment"
+      ]
+    },
+    {
+      "id": "exp-13",
+      role: "Web Developer Team Member",
+      company: "The Space Association Student Chapter (TSASC BVM)",
+      period: "Nov 2023 – Apr 2024",
+      category: "College Leadership",
+      description: "Contributed to frontend development, UI components, and event pages for space association web portals.",
+      achievements: [
+        "Developed responsive web pages and interactive club features",
+        "Collaborated with senior developers on UI/UX enhancements"
+      ]
+    },
+    {
+      "id": "exp-14",
+      "role": "Volunteer",
+      "company": "Computer Society of India (CSI) BVM Student Branch",
+      "period": "Jul 2023 – May 2024",
+      "category": "College Leadership",
+      "description": "Volunteered in organizing technical symposiums, coding competitions, and student workshops.",
+      achievements: [
+        "Assisted in conducting national-level technical symposiums and competitive coding events",
+        "Managed logistics, participant registrations, and technical event setups"
+      ]
+    }
+  ],
+  "achievements": [
+    {
+      "id": "ach-1",
+      "title": "2nd Runner Up (Won ₹75,000 Cash Prize)",
+      "event": "Odoo X KSV 2026 Hackathon",
+      "period": "2026",
+      "description": "Secured 2nd Runner-Up position out of 838 participating teams across India for engineering ShareRide Enterprise Carpooling Platform.",
+      "prize": "₹75,000 Cash Prize (₹25,000 Odoo Prize + ₹50,000 KSV Award)",
+      "badge": "2nd Runner-Up"
+    },
+    {
+      "id": "ach-2",
+      "title": "National Finalist – Odoo Headquarters",
+      "event": "Odoo Hackathon 2026",
+      "period": "Sept 2026",
+      "description": "Qualified as a National Finalist to compete live at Odoo Headquarters in September 2026.",
+      "prize": "National Finalist Selection",
+      "badge": "Finalist"
+    },
+    {
+      "id": "ach-3",
+      "title": "Runner Up",
+      "event": "WEBATHON '24 Hackathon",
+      "period": "2024",
+      "description": "Awarded Runner-Up title for building high-performance responsive web application prototypes in a fast-paced competitive webathon.",
+      "prize": "Runner-Up Trophy & Certificate",
+      "badge": "Runner-Up"
+    },
+    {
+      "id": "ach-4",
+      "title": "BEST Student Chapter Award",
+      "event": "IEEE Gujarat Section (Nirma University)",
+      "period": "2024 – 2025",
+      "description": "Led IEEE BVM Student Branch as Developer Head to win the prestigious BEST Student Chapter Award among IEEE chapters across Gujarat.",
+      "prize": "Best Student Chapter Recognition",
+      "badge": "Best Chapter Award"
     }
   ]
 }
