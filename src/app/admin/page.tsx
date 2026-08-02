@@ -68,30 +68,20 @@ export default function AdminDashboardPage() {
     if (savedLocal) {
       try {
         const parsed = JSON.parse(savedLocal);
-        if (parsed && Array.isArray(parsed.experience) && parsed.experience.length < initialPortfolioData.experience.length) {
-          localStorage.removeItem('portfolio_custom_data');
-        } else if (parsed && parsed.personalInfo) {
+        if (parsed && parsed.personalInfo) {
           setData(parsed);
         }
-      } catch (e) {
-        localStorage.removeItem('portfolio_custom_data');
-      }
+      } catch (e) {}
     }
 
-    // Fetch existing portfolio data
+    // Fetch existing portfolio data from server (data/store.json)
     fetch('/api/admin/data')
       .then((res) => res.json())
       .then((fetchedData) => {
         if (fetchedData && fetchedData.personalInfo) {
-          if (fetchedData.experience && fetchedData.experience.length >= initialPortfolioData.experience.length) {
-            setData(fetchedData);
-          } else {
-            setData({
-              ...initialPortfolioData,
-              ...fetchedData,
-              experience: initialPortfolioData.experience,
-              achievements: initialPortfolioData.achievements
-            });
+          setData(fetchedData);
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('portfolio_custom_data', JSON.stringify(fetchedData));
           }
         }
       })
