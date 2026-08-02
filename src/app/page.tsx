@@ -31,7 +31,7 @@ export default function Home() {
     }
 
     // 2. Fetch authoritative live data from API route (data/store.json)
-    fetch('/api/admin/data')
+    fetch(`/api/admin/data?t=${Date.now()}`, { cache: 'no-store' })
       .then((res) => res.json())
       .then((resData) => {
         if (resData && resData.personalInfo) {

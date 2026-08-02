@@ -1,16 +1,25 @@
 import { NextResponse } from 'next/server';
-import { getPortfolioData, savePortfolioData } from '@/lib/storage';
+import { getPortfolioDataAsync, savePortfolioDataAsync } from '@/lib/storage';
 import { PortfolioData } from '@/data/portfolioData';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET() {
-  const data = getPortfolioData();
-  return NextResponse.json(data);
+  const data = await getPortfolioDataAsync();
+  return NextResponse.json(data, {
+    headers: {
+      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    }
+  });
 }
 
 export async function POST(request: Request) {
   try {
     const updatedData: PortfolioData = await request.json();
-    savePortfolioData(updatedData);
+    await savePortfolioDataAsync(updatedData);
 
     const response = NextResponse.json({ success: true, data: updatedData });
 
