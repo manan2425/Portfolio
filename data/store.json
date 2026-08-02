@@ -290,7 +290,7 @@
       "id": "exp-6",
       "role": "Treasurer",
       "company": "The Space Association Student Chapter (TSASC BVM)",
-      "period": "July 2025 – July 2026",
+      "period": "Apr 2025 – July 2025",
       "category": "College Leadership",
       "description": "Managed financial budgeting, fund allocations, and accounting records for space and astronomy chapter initiatives.",
       "achievements": [
@@ -341,7 +341,7 @@
       "period": "Apr 2024 – Apr 2025",
       "category": "College Leadership",
       "description": "Led technical web development projects and digital infrastructure for the Space Association student chapter.",
-      achievements: [
+      "achievements": [
         "Managed technical project teams and built chapter web presence",
         "Created interactive web portals for space science events and student registrations"
       ]
@@ -353,7 +353,7 @@
       "period": "Jan 2024 – Jan 2025",
       "category": "College Leadership",
       "description": "Led web development and technical initiatives for IEEE BVM SB during an award-winning term.",
-      achievements: [
+      "achievements": [
         "Won BEST Student Chapter at Nirma University organized by IEEE Gujarat Section",
         "Architected and managed official IEEE BVM SB web applications and event platforms"
       ]
@@ -365,19 +365,19 @@
       "period": "Jan 2024 – Jan 2025",
       "category": "College Leadership",
       "description": "Led machine learning workshops, AI research projects, and hands-on developer bootcamps.",
-      achievements: [
+      "achievements": [
         "Organized hands-on AI/ML bootcamps and guided student project research",
         "Taught machine learning algorithms, Python data science libraries, and model deployment"
       ]
     },
     {
       "id": "exp-13",
-      role: "Web Developer Team Member",
-      company: "The Space Association Student Chapter (TSASC BVM)",
-      period: "Nov 2023 – Apr 2024",
-      category: "College Leadership",
-      description: "Contributed to frontend development, UI components, and event pages for space association web portals.",
-      achievements: [
+      "role": "Web Developer Team Member",
+      "company": "The Space Association Student Chapter (TSASC BVM)",
+      "period": "Nov 2023 – Apr 2024",
+      "category": "College Leadership",
+      "description": "Contributed to frontend development, UI components, and event pages for space association web portals.",
+      "achievements": [
         "Developed responsive web pages and interactive club features",
         "Collaborated with senior developers on UI/UX enhancements"
       ]
@@ -389,7 +389,7 @@
       "period": "Jul 2023 – May 2024",
       "category": "College Leadership",
       "description": "Volunteered in organizing technical symposiums, coding competitions, and student workshops.",
-      achievements: [
+      "achievements": [
         "Assisted in conducting national-level technical symposiums and competitive coding events",
         "Managed logistics, participant registrations, and technical event setups"
       ]

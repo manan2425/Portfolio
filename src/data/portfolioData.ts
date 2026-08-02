@@ -270,7 +270,7 @@ export const initialPortfolioData: PortfolioData = {
       id: "exp-6",
       role: "Treasurer",
       company: "The Space Association Student Chapter (TSASC BVM)",
-      period: "July 2025 – July 2026",
+      period: "Apr 2025 – July 2025",
       category: "College Leadership",
       description: "Managed financial budgeting, fund allocations, and accounting records for space and astronomy chapter initiatives.",
       achievements: [
