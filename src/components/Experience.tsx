@@ -2,17 +2,18 @@
 
 import React, { useState } from 'react';
 import { Experience as ExperienceType } from '@/data/portfolioData';
-import { Briefcase, Calendar, CheckCircle2, Award, Users, Clock, Building2, GitCommit, GitBranch, Terminal } from 'lucide-react';
+import { Briefcase, Calendar, CheckCircle2, Award, Users, Building2, Sparkles, Terminal, Code2, ArrowRight } from 'lucide-react';
 
 interface ExperienceProps {
   experience: ExperienceType[];
 }
 
 export const Experience: React.FC<ExperienceProps> = ({ experience }) => {
-  const [activeCategory, setActiveCategory] = useState<'All' | 'Work & Internships' | 'College Leadership'>('All');
-  const [activeYear, setActiveYear] = useState<string>('All');
+  const [activeTab, setActiveTab] = useState<'work' | 'leadership'>('work');
+  const [selectedYear, setSelectedYear] = useState<string>('All');
 
   const getPrimaryYear = (period: string): string => {
+    if (period.includes('Present')) return '2026';
     const match = period.match(/\b(202[3-9])\b/g);
     if (match && match.length > 0) {
       return match[match.length - 1];
@@ -21,6 +22,7 @@ export const Experience: React.FC<ExperienceProps> = ({ experience }) => {
   };
 
   const getMonthScore = (period: string): number => {
+    if (period.includes('Present')) return 99;
     const months: Record<string, number> = {
       jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6,
       jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12
@@ -33,312 +35,311 @@ export const Experience: React.FC<ExperienceProps> = ({ experience }) => {
     return 6;
   };
 
-  const filteredExperience = experience.filter((item) => {
-    const matchesCat =
-      activeCategory === 'All' ||
-      (activeCategory === 'Work & Internships' && item.category === 'Work & Internships') ||
-      (activeCategory === 'College Leadership' && item.category === 'College Leadership');
+  // Filter work vs leadership
+  const workExperience = experience.filter(
+    (e) => !e.category || e.category === 'Work & Internships'
+  );
+  const leadershipExperience = experience.filter(
+    (e) => e.category === 'College Leadership'
+  );
 
-    const itemYear = getPrimaryYear(item.period);
-    const matchesYear = activeYear === 'All' || itemYear === activeYear;
+  const currentList = activeTab === 'work' ? workExperience : leadershipExperience;
 
-    return matchesCat && matchesYear;
+  // Filter by year if selected
+  const filteredList = currentList.filter((item) => {
+    if (selectedYear === 'All') return true;
+    return getPrimaryYear(item.period) === selectedYear;
   });
 
   const availableYears = Array.from(
-    new Set(experience.map((item) => getPrimaryYear(item.period)))
+    new Set(currentList.map((item) => getPrimaryYear(item.period)))
   ).sort((a, b) => parseInt(b) - parseInt(a));
 
   return (
-    <section id="experience" className="section-spacing" style={{ backgroundColor: 'var(--bg-app)' }}>
+    <section id="experience" className="section-spacing" style={{ backgroundColor: 'var(--bg-app)', borderTop: '1px solid var(--border-card)' }}>
       <div className="container">
         {/* Section Header */}
-        <div style={{ marginBottom: '36px' }}>
+        <div style={{ marginBottom: '36px', textAlign: 'center' }}>
           <span className="bento-section-tag">
-            <GitBranch size={14} color="var(--terminal-cyan)" />
-            <span>$ git log --graph --oneline --all</span>
+            <Terminal size={14} color="var(--terminal-cyan)" />
+            <span>$ cat /var/log/career_history.matrix</span>
           </span>
           <h2 className="section-title">
             Career & <span className="gradient-heading">Leadership Log</span>
           </h2>
-          <p className="section-subtitle" style={{ marginTop: '8px' }}>
-            Chronological engineering milestones, industrial internships, and leadership chapter terms.
+          <p className="section-subtitle" style={{ margin: '8px auto 0 auto' }}>
+            Research fellowships, engineering internships, and institutional leadership roles.
           </p>
         </div>
 
-        {/* Filter Controls Bar */}
+        {/* Dual Primary Tabs: Work & Research vs College Leadership */}
         <div
           style={{
-            maxWidth: '900px',
-            margin: '0 auto 40px auto',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '14px'
+            maxWidth: '680px',
+            margin: '0 auto 32px auto',
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '10px',
+            padding: '6px',
+            backgroundColor: 'var(--bg-card)',
+            borderRadius: 'var(--radius-xl)',
+            border: '1px solid var(--border-card-hover)',
+            boxShadow: 'var(--shadow-bento)'
           }}
         >
-          {/* Category Tabs */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-subtle)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginRight: '4px' }}>
-              Category:
-            </span>
-            {[
-              { id: 'All', label: 'All Roles', count: experience.length, icon: Briefcase },
-              { id: 'Work & Internships', label: 'Work & Internships', count: experience.filter((e) => e.category === 'Work & Internships').length, icon: Award },
-              { id: 'College Leadership', label: 'College Leadership', count: experience.filter((e) => e.category === 'College Leadership').length, icon: Users }
-            ].map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeCategory === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveCategory(tab.id as any)}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '8px 16px',
-                    borderRadius: 'var(--radius-full)',
-                    fontSize: '0.825rem',
-                    fontWeight: 700,
-                    fontFamily: 'var(--font-mono)',
-                    cursor: 'pointer',
-                    border: isActive ? '1px solid var(--terminal-cyan)' : '1px solid var(--border-card)',
-                    backgroundColor: isActive ? 'rgba(6, 182, 212, 0.2)' : 'var(--bg-card)',
-                    color: isActive ? 'var(--terminal-cyan)' : 'var(--text-muted)',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  <Icon size={14} color={isActive ? 'var(--terminal-cyan)' : 'currentColor'} />
-                  <span>{tab.label}</span>
-                  <span
-                    style={{
-                      padding: '2px 7px',
-                      borderRadius: 'var(--radius-full)',
-                      fontSize: '0.72rem',
-                      backgroundColor: isActive ? 'rgba(6, 182, 212, 0.3)' : 'var(--border-card)',
-                      color: isActive ? '#FFFFFF' : 'var(--text-muted)'
-                    }}
-                  >
-                    {tab.count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+          <button
+            onClick={() => {
+              setActiveTab('work');
+              setSelectedYear('All');
+            }}
+            style={{
+              padding: '12px 20px',
+              borderRadius: 'var(--radius-lg)',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              backgroundColor: activeTab === 'work' ? 'var(--terminal-cyan)' : 'transparent',
+              color: activeTab === 'work' ? '#000000' : 'var(--text-muted)',
+              fontFamily: 'var(--font-mono)',
+              fontWeight: 800,
+              fontSize: '0.875rem',
+              transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+              boxShadow: activeTab === 'work' ? '0 4px 16px rgba(6, 182, 212, 0.35)' : 'none'
+            }}
+          >
+            <Briefcase size={16} />
+            <span>Work & Research ({workExperience.length})</span>
+          </button>
 
-          {/* Year Pills */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-subtle)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginRight: '4px' }}>
-              Year:
-            </span>
+          <button
+            onClick={() => {
+              setActiveTab('leadership');
+              setSelectedYear('All');
+            }}
+            style={{
+              padding: '12px 20px',
+              borderRadius: 'var(--radius-lg)',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              backgroundColor: activeTab === 'leadership' ? 'var(--terminal-cyan)' : 'transparent',
+              color: activeTab === 'leadership' ? '#000000' : 'var(--text-muted)',
+              fontFamily: 'var(--font-mono)',
+              fontWeight: 800,
+              fontSize: '0.875rem',
+              transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+              boxShadow: activeTab === 'leadership' ? '0 4px 16px rgba(6, 182, 212, 0.35)' : 'none'
+            }}
+          >
+            <Users size={16} />
+            <span>Leadership Roles ({leadershipExperience.length})</span>
+          </button>
+        </div>
+
+        {/* Year Filter Bar */}
+        <div
+          style={{
+            maxWidth: '920px',
+            margin: '0 auto 36px auto',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            flexWrap: 'wrap'
+          }}
+        >
+          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: 'var(--text-subtle)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginRight: '6px' }}>
+            Filter Year:
+          </span>
+          <button
+            onClick={() => setSelectedYear('All')}
+            style={{
+              padding: '5px 14px',
+              borderRadius: 'var(--radius-full)',
+              fontSize: '0.78rem',
+              fontWeight: 800,
+              fontFamily: 'var(--font-mono)',
+              cursor: 'pointer',
+              border: selectedYear === 'All' ? '1px solid var(--terminal-green)' : '1px solid var(--border-card)',
+              backgroundColor: selectedYear === 'All' ? 'rgba(16, 185, 129, 0.2)' : 'var(--bg-card)',
+              color: selectedYear === 'All' ? 'var(--terminal-green)' : 'var(--text-muted)',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            All Years
+          </button>
+
+          {availableYears.map((yr) => (
             <button
-              onClick={() => setActiveYear('All')}
+              key={yr}
+              onClick={() => setSelectedYear(yr)}
               style={{
-                padding: '6px 14px',
-                borderRadius: 'var(--radius-sm)',
-                fontSize: '0.8rem',
-                fontWeight: 700,
+                padding: '5px 14px',
+                borderRadius: 'var(--radius-full)',
+                fontSize: '0.78rem',
+                fontWeight: 800,
                 fontFamily: 'var(--font-mono)',
                 cursor: 'pointer',
-                border: activeYear === 'All' ? '1px solid var(--terminal-green)' : '1px solid var(--border-card)',
-                backgroundColor: activeYear === 'All' ? 'rgba(16, 185, 129, 0.2)' : 'var(--bg-card)',
-                color: activeYear === 'All' ? 'var(--terminal-green)' : 'var(--text-main)',
+                border: selectedYear === yr ? '1px solid var(--terminal-green)' : '1px solid var(--border-card)',
+                backgroundColor: selectedYear === yr ? 'rgba(16, 185, 129, 0.2)' : 'var(--bg-card)',
+                color: selectedYear === yr ? 'var(--terminal-green)' : 'var(--text-muted)',
                 transition: 'all 0.15s ease'
               }}
             >
-              All Years
+              {yr}
             </button>
-
-            {availableYears.map((yr) => (
-              <button
-                key={yr}
-                onClick={() => setActiveYear(yr)}
-                style={{
-                  padding: '6px 14px',
-                  borderRadius: 'var(--radius-sm)',
-                  fontSize: '0.8rem',
-                  fontWeight: 700,
-                  fontFamily: 'var(--font-mono)',
-                  cursor: 'pointer',
-                  border: activeYear === yr ? '1px solid var(--terminal-green)' : '1px solid var(--border-card)',
-                  backgroundColor: activeYear === yr ? 'rgba(16, 185, 129, 0.2)' : 'var(--bg-card)',
-                  color: activeYear === yr ? 'var(--terminal-green)' : 'var(--text-main)',
-                  transition: 'all 0.15s ease'
-                }}
-              >
-                {yr}
-              </button>
-            ))}
-          </div>
+          ))}
         </div>
 
-        {/* Year-Wise Git Log Timeline */}
-        <div style={{ maxWidth: '900px', margin: '0 auto', position: 'relative', paddingLeft: '28px' }}>
-          {/* Main Spine */}
-          <div
-            style={{
-              position: 'absolute',
-              left: '9px',
-              top: '24px',
-              bottom: '24px',
-              width: '2px',
-              background: 'linear-gradient(180deg, var(--terminal-cyan) 0%, var(--terminal-green) 50%, rgba(16, 185, 129, 0.2) 100%)'
-            }}
-          />
+        {/* Matrix Grid of Experience Cards */}
+        <div
+          style={{
+            maxWidth: '1040px',
+            margin: '0 auto',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(460px, 1fr))',
+            gap: '24px'
+          }}
+          className="experience-matrix-grid"
+        >
+          {filteredList
+            .sort((a, b) => {
+              const yearDiff = parseInt(getPrimaryYear(b.period)) - parseInt(getPrimaryYear(a.period));
+              if (yearDiff !== 0) return yearDiff;
+              return getMonthScore(b.period) - getMonthScore(a.period);
+            })
+            .map((item, idx) => {
+              const isIITKgp = item.company.includes('IIT Kharagpur') || item.id === 'exp-jrf';
 
-          {availableYears.map((yearStr) => {
-            const yearItems = filteredExperience
-              .filter((item) => getPrimaryYear(item.period) === yearStr)
-              .sort((a, b) => getMonthScore(b.period) - getMonthScore(a.period));
-
-            if (yearItems.length === 0) return null;
-
-            return (
-              <div key={yearStr} style={{ marginBottom: '44px', position: 'relative' }}>
-                {/* Year Marker Header */}
+              return (
                 <div
+                  key={item.id || idx}
+                  className="bento-card"
                   style={{
+                    padding: '28px',
+                    backgroundColor: isIITKgp ? '#151f33' : 'var(--bg-card)',
+                    border: isIITKgp ? '1px solid rgba(245, 158, 11, 0.5)' : '1px solid var(--border-card-hover)',
+                    borderRadius: 'var(--radius-xl)',
+                    boxShadow: isIITKgp ? '0 0 30px rgba(245, 158, 11, 0.18)' : 'var(--shadow-bento)',
                     display: 'flex',
-                    alignItems: 'center',
-                    gap: '14px',
-                    marginBottom: '20px',
-                    marginLeft: '-28px',
-                    position: 'sticky',
-                    top: '80px',
-                    zIndex: 10,
-                    backgroundColor: 'rgba(11, 15, 25, 0.95)',
-                    padding: '8px 0',
-                    backdropFilter: 'blur(8px)'
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
                   }}
                 >
-                  <div
-                    style={{
-                      width: '20px',
-                      height: '20px',
-                      borderRadius: '50%',
-                      backgroundColor: 'var(--bg-app)',
-                      border: '3px solid var(--terminal-cyan)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      boxShadow: '0 0 10px rgba(6, 182, 212, 0.4)',
-                      flexShrink: 0
-                    }}
-                  >
-                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--terminal-cyan)' }} />
-                  </div>
-
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--terminal-cyan)', fontFamily: 'var(--font-mono)' }}>
-                      release/{yearStr}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: '0.72rem',
-                        fontWeight: 700,
-                        fontFamily: 'var(--font-mono)',
-                        padding: '2px 10px',
-                        borderRadius: 'var(--radius-full)',
-                        backgroundColor: 'var(--bg-card)',
-                        color: 'var(--text-muted)',
-                        border: '1px solid var(--border-card)'
-                      }}
-                    >
-                      {yearItems.length} commits
-                    </span>
-                  </div>
-                </div>
-
-                {/* Timeline Cards */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-                  {yearItems.map((item, idx) => {
-                    const isWork = item.category === 'Work & Internships';
-
-                    return (
-                      <div
-                        key={item.id || `${yearStr}-${idx}`}
-                        className="bento-card"
+                  <div>
+                    {/* Header Pill & Badge */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', marginBottom: '16px' }}>
+                      <span
                         style={{
-                          padding: '24px',
-                          backgroundColor: 'var(--bg-card)',
-                          position: 'relative',
-                          borderLeft: `4px solid ${isWork ? 'var(--terminal-cyan)' : 'var(--terminal-yellow)'}`,
-                          transition: 'all 0.2s ease'
+                          fontSize: '0.725rem',
+                          fontWeight: 800,
+                          fontFamily: 'var(--font-mono)',
+                          padding: '3px 10px',
+                          borderRadius: 'var(--radius-full)',
+                          backgroundColor: isIITKgp ? 'rgba(245, 158, 11, 0.2)' : 'rgba(6, 182, 212, 0.15)',
+                          color: isIITKgp ? 'var(--terminal-yellow)' : 'var(--terminal-cyan)',
+                          border: `1px solid ${isIITKgp ? 'rgba(245, 158, 11, 0.4)' : 'rgba(6, 182, 212, 0.3)'}`
                         }}
                       >
-                        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' }}>
-                          <div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '4px' }}>
-                              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-main)', fontFamily: 'var(--font-mono)', lineHeight: 1.3 }}>
-                                {item.role}
-                              </h3>
-                              {item.category && (
-                                <span
-                                  style={{
-                                    fontSize: '0.7rem',
-                                    fontWeight: 800,
-                                    fontFamily: 'var(--font-mono)',
-                                    padding: '3px 9px',
-                                    borderRadius: 'var(--radius-full)',
-                                    backgroundColor: isWork ? 'rgba(6, 182, 212, 0.15)' : 'rgba(245, 158, 11, 0.15)',
-                                    color: isWork ? 'var(--terminal-cyan)' : 'var(--terminal-yellow)',
-                                    border: `1px solid ${isWork ? 'rgba(6, 182, 212, 0.3)' : 'rgba(245, 158, 11, 0.3)'}`
-                                  }}
-                                >
-                                  {item.category}
-                                </span>
-                              )}
-                            </div>
+                        {isIITKgp ? '★ FEATURED RESEARCH ROLE' : item.category || 'POSITION'}
+                      </span>
 
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.9rem', fontWeight: 700, color: 'var(--terminal-green)', fontFamily: 'var(--font-mono)' }}>
-                              <Building2 size={14} style={{ flexShrink: 0 }} />
-                              <span>{item.company}</span>
-                            </div>
-                          </div>
-
-                          <div
-                            style={{
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '6px',
-                              padding: '4px 12px',
-                              borderRadius: 'var(--radius-full)',
-                              fontSize: '0.78rem',
-                              fontWeight: 800,
-                              fontFamily: 'var(--font-mono)',
-                              backgroundColor: 'var(--bg-terminal)',
-                              color: 'var(--text-main)',
-                              border: '1px solid var(--border-card)'
-                            }}
-                          >
-                            <Calendar size={12} color="var(--terminal-cyan)" />
-                            <span>{item.period}</span>
-                          </div>
-                        </div>
-
-                        <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '14px' }}>
-                          {item.description}
-                        </p>
-
-                        {item.achievements && item.achievements.length > 0 && (
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', paddingTop: '12px', borderTop: '1px solid var(--border-card)' }}>
-                            {item.achievements.map((ach, achIdx) => (
-                              <div key={achIdx} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.825rem', color: 'var(--text-main)', fontFamily: 'var(--font-mono)' }}>
-                                <CheckCircle2 size={14} color={isWork ? 'var(--terminal-cyan)' : 'var(--terminal-yellow)'} style={{ flexShrink: 0, marginTop: '2px' }} />
-                                <span>{ach}</span>
-                              </div>
-                            ))}
-                          </div>
-                        )}
+                      <div
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          padding: '4px 12px',
+                          borderRadius: 'var(--radius-full)',
+                          fontSize: '0.78rem',
+                          fontWeight: 800,
+                          fontFamily: 'var(--font-mono)',
+                          backgroundColor: 'var(--bg-terminal)',
+                          color: 'var(--text-main)',
+                          border: '1px solid var(--border-card)'
+                        }}
+                      >
+                        <Calendar size={12} color="var(--terminal-cyan)" />
+                        <span>{item.period}</span>
                       </div>
-                    );
-                  })}
+                    </div>
+
+                    {/* Role Title */}
+                    <h3
+                      style={{
+                        fontSize: '1.25rem',
+                        fontWeight: 800,
+                        color: 'var(--text-main)',
+                        fontFamily: 'var(--font-mono)',
+                        marginBottom: '8px',
+                        lineHeight: 1.3
+                      }}
+                    >
+                      {item.role}
+                    </h3>
+
+                    {/* Institution / Company */}
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        fontSize: '0.925rem',
+                        fontWeight: 700,
+                        color: isIITKgp ? 'var(--terminal-yellow)' : 'var(--terminal-cyan)',
+                        fontFamily: 'var(--font-mono)',
+                        marginBottom: '16px'
+                      }}
+                    >
+                      <Building2 size={16} style={{ flexShrink: 0 }} />
+                      <span>{item.company}</span>
+                    </div>
+
+                    {/* Description */}
+                    <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '20px' }}>
+                      {item.description}
+                    </p>
+                  </div>
+
+                  {/* Accomplishments Bullet Points */}
+                  {item.achievements && item.achievements.length > 0 && (
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '8px',
+                        paddingTop: '16px',
+                        borderTop: '1px solid var(--border-card)'
+                      }}
+                    >
+                      {item.achievements.map((ach, achIdx) => (
+                        <div key={achIdx} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.825rem', color: 'var(--text-main)', fontFamily: 'var(--font-mono)' }}>
+                          <CheckCircle2 size={14} color={isIITKgp ? 'var(--terminal-yellow)' : 'var(--terminal-green)'} style={{ flexShrink: 0, marginTop: '2px' }} />
+                          <span>{ach}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       </div>
+
+      <style jsx>{`
+        @media (max-width: 768px) {
+          :global(.experience-matrix-grid) {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </section>
   );
 };

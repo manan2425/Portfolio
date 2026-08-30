@@ -8,6 +8,8 @@ const DB_NAME = process.env.MONGODB_DB_NAME || 'portfolio_db';
 const COLLECTION_NAME = 'portfolio_data';
 
 export async function getPortfolioDataAsync(): Promise<PortfolioData> {
+  let dbData: Partial<PortfolioData> = {};
+
   // 1. Try MongoDB Atlas if configured
   if (process.env.MONGODB_URI && clientPromise) {
     try {
@@ -18,7 +20,7 @@ export async function getPortfolioDataAsync(): Promise<PortfolioData> {
 
       if (doc && doc.personalInfo) {
         const { _id, ...cleanData } = doc;
-        return cleanData as PortfolioData;
+        dbData = cleanData as PortfolioData;
       }
     } catch (error) {
       console.error("Error reading from MongoDB Atlas:", error);
@@ -26,7 +28,33 @@ export async function getPortfolioDataAsync(): Promise<PortfolioData> {
   }
 
   // 2. Fallback to store.json
-  return getPortfolioData();
+  const localData = getPortfolioData();
+
+  // Merge so new fields / roles are never lost
+  const merged: PortfolioData = {
+    ...initialPortfolioData,
+    ...localData,
+    ...dbData,
+    personalInfo: {
+      ...initialPortfolioData.personalInfo,
+      ...(localData.personalInfo || {}),
+      ...(dbData.personalInfo || {})
+    },
+    experience: (dbData.experience && dbData.experience.length > 0) 
+      ? dbData.experience 
+      : (localData.experience && localData.experience.length > 0 ? localData.experience : initialPortfolioData.experience),
+    projects: (dbData.projects && dbData.projects.length > 0) 
+      ? dbData.projects 
+      : (localData.projects && localData.projects.length > 0 ? localData.projects : initialPortfolioData.projects),
+    skills: (dbData.skills && dbData.skills.length > 0) 
+      ? dbData.skills 
+      : (localData.skills && localData.skills.length > 0 ? localData.skills : initialPortfolioData.skills),
+    achievements: (dbData.achievements && dbData.achievements.length > 0) 
+      ? dbData.achievements 
+      : (localData.achievements && localData.achievements.length > 0 ? localData.achievements : initialPortfolioData.achievements)
+  };
+
+  return merged;
 }
 
 export function getPortfolioData(): PortfolioData {
