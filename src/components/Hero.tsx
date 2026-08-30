@@ -409,6 +409,12 @@ export const Hero: React.FC<HeroProps> = ({ personalInfo, onOpenCLI }) => {
           }
         }
         @media (max-width: 640px) {
+          :global(.hero-bento-grid > div) {
+            padding: 20px !important;
+          }
+          :global(.hero-bento-grid > div > div:nth-child(2)) {
+            padding: 20px !important;
+          }
           .hero-cta-row {
             flex-direction: column !important;
             align-items: stretch !important;

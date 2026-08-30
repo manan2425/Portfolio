@@ -203,7 +203,7 @@ export const Experience: React.FC<ExperienceProps> = ({ experience }) => {
             maxWidth: '1040px',
             margin: '0 auto',
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(460px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
             gap: '24px'
           }}
           className="experience-matrix-grid"

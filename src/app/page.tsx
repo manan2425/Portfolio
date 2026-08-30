@@ -19,8 +19,12 @@ export default function Home() {
   const [viewMode, setViewMode] = useState<'gui' | 'cli'>('gui');
 
   useEffect(() => {
-    // 1. Instant render from local storage cache
+    // Force scroll to top (Hero section) on page refresh/mount
     if (typeof window !== 'undefined') {
+      window.history.scrollRestoration = 'manual';
+      window.scrollTo(0, 0);
+
+      // 1. Instant render from local storage cache
       const savedLocalData = localStorage.getItem('portfolio_custom_data');
       if (savedLocalData) {
         try {
