@@ -75,18 +75,18 @@ export interface PortfolioData {
 export const initialPortfolioData: PortfolioData = {
   personalInfo: {
     name: "Manan Patel",
-    title: "MERN Stack & AI/ML Engineer",
-    tagline: "Building scalable, responsive web applications and intelligent data-driven solutions.",
-    about: "Aspiring MERN Stack Developer with a strong foundation in MongoDB, Express.js, React.js, and Node.js, specializing in building scalable, responsive, and user-friendly web applications. Possessing secondary expertise in AI/ML, enabling integration of intelligent and data-driven features into modern web solutions.",
+    title: "Junior Research Fellow @ IIT Kharagpur | MERN & AI/ML Engineer",
+    tagline: "Building scalable, responsive web applications and intelligent data-driven research solutions.",
+    about: "Junior Research Fellow (JRF) at Indian Institute of Technology Kharagpur (IIT Kharagpur) & software engineer specializing in building scalable full-stack web applications, machine learning pipelines, and intelligent data-driven system architectures.",
     email: "mananpatel448@gmail.com",
     github: "https://github.com/manan2425",
     linkedin: "https://linkedin.com/in/manan-patel-806809280",
     twitter: "https://twitter.com/manan2425",
     resumeUrl: "/resume4.pdf",
     isAvailable: true,
-    location: "Anand, Gujarat, India",
+    location: "Kharagpur / Anand, India",
     adminPasscode: "admin123",
-    overviewMetric1Value: "04+",
+    overviewMetric1Value: "06+",
     overviewMetric1Label: "Projects",
     overviewMetric2Value: "08+",
     overviewMetric2Label: "Tech Stack",
@@ -94,7 +94,7 @@ export const initialPortfolioData: PortfolioData = {
     overviewMetric3Label: "Type Safe",
     overviewMetric4Value: "99+",
     overviewMetric4Label: "Performance",
-    overviewSummary: "Specialized in engineering full-stack platforms with modern App Router architecture.",
+    overviewSummary: "Junior Research Fellow at IIT Kharagpur engineering scalable web systems & AI/ML models.",
   },
   projects: [
     {
@@ -206,6 +206,18 @@ export const initialPortfolioData: PortfolioData = {
     { id: "sk-8", name: "Git, GitHub & REST APIs", category: "Tools & Others", level: 90, iconName: "GitBranch" }
   ],
   experience: [
+    {
+      id: "exp-jrf",
+      role: "Junior Research Fellow (JRF)",
+      company: "Indian Institute of Technology Kharagpur (IIT Kharagpur)",
+      period: "2026 – Present",
+      category: "Work & Internships",
+      description: "Conducting research and software engineering computational modeling at Indian Institute of Technology Kharagpur.",
+      achievements: [
+        "Appointed as Junior Research Fellow (JRF) conducting research at IIT Kharagpur",
+        "Architecting data-driven algorithms, research software modules, and AI/ML model workflows"
+      ]
+    },
     {
       id: "exp-1",
       role: "Full Semester External Project Intern",
@@ -414,4 +426,3 @@ export const initialPortfolioData: PortfolioData = {
     }
   ]
 };
-

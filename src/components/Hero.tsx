@@ -15,7 +15,7 @@ import {
   Terminal as TerminalIcon,
   Zap,
   CheckCircle2,
-  FolderGit2
+  Award
 } from 'lucide-react';
 
 interface HeroProps {
@@ -25,7 +25,7 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ personalInfo, onOpenCLI }) => {
   const [typedText, setTypedText] = useState('');
-  const fullText = `npx introduce-developer --name "${personalInfo.name}" --role "${personalInfo.title}"`;
+  const fullText = `npx introduce-developer --name "${personalInfo.name}" --title "${personalInfo.title}"`;
 
   useEffect(() => {
     let index = 0;
@@ -74,7 +74,7 @@ export const Hero: React.FC<HeroProps> = ({ personalInfo, onOpenCLI }) => {
               </div>
               <div className="terminal-title">
                 <TerminalIcon size={14} color="var(--terminal-green)" />
-                <span>manan@linux-dev: ~/profile.sh</span>
+                <span>manan@iitkgp-dev: ~/profile.sh</span>
               </div>
               <div style={{ fontSize: '0.72rem', color: 'var(--terminal-cyan)', fontFamily: 'var(--font-mono)' }}>
                 bash 5.2
@@ -83,12 +83,33 @@ export const Hero: React.FC<HeroProps> = ({ personalInfo, onOpenCLI }) => {
 
             {/* Card Content Body */}
             <div style={{ padding: '36px' }}>
+              {/* IIT Kharagpur JRF Special Highlight Badge */}
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '6px 14px',
+                  borderRadius: 'var(--radius-full)',
+                  backgroundColor: 'rgba(245, 158, 11, 0.15)',
+                  border: '1px solid rgba(245, 158, 11, 0.35)',
+                  color: 'var(--terminal-yellow)',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.8rem',
+                  fontWeight: 800,
+                  marginBottom: '16px'
+                }}
+              >
+                <Award size={15} color="var(--terminal-yellow)" />
+                <span>Junior Research Fellow (JRF) @ IIT Kharagpur</span>
+              </div>
+
               {/* Header Status & Location Row */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '24px' }}>
                 {personalInfo.isAvailable && (
                   <div className="status-pill">
                     <span className="status-dot-green"></span>
-                    <span>Status: Available for Engineering Roles</span>
+                    <span>Status: Available for Research & Dev Roles</span>
                   </div>
                 )}
                 {personalInfo.location && (
@@ -108,13 +129,13 @@ export const Hero: React.FC<HeroProps> = ({ personalInfo, onOpenCLI }) => {
                   border: '1px solid var(--border-card)',
                   marginBottom: '24px',
                   fontFamily: 'var(--font-mono)',
-                  fontSize: '0.9rem',
+                  fontSize: '0.875rem',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px'
                 }}
               >
-                <span style={{ color: 'var(--terminal-green)', fontWeight: 800 }}>manan@dev:~$</span>
+                <span style={{ color: 'var(--terminal-green)', fontWeight: 800 }}>manan@iitkgp:~$</span>
                 <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>{typedText}</span>
                 <span className="cursor-blink"></span>
               </div>
@@ -122,14 +143,14 @@ export const Hero: React.FC<HeroProps> = ({ personalInfo, onOpenCLI }) => {
               {/* Title & Headline */}
               <h1
                 style={{
-                  fontSize: 'clamp(2.2rem, 4vw, 3.2rem)',
+                  fontSize: 'clamp(2.1rem, 4vw, 3.1rem)',
                   fontWeight: 800,
                   lineHeight: 1.15,
                   letterSpacing: '-0.03em',
                   marginBottom: '16px'
                 }}
               >
-                Software Developer <br />
+                Junior Research Fellow <br />
                 <span className="gradient-heading">{personalInfo.name}</span>
               </h1>
 
@@ -285,7 +306,7 @@ export const Hero: React.FC<HeroProps> = ({ personalInfo, onOpenCLI }) => {
             </div>
 
             <div style={{ fontSize: '0.825rem', color: 'var(--text-muted)', lineHeight: 1.5, fontFamily: 'var(--font-mono)' }}>
-              $ echo &quot;{personalInfo.overviewSummary || 'Specialized in engineering full-stack platforms with modern App Router architecture.'}&quot;
+              $ echo &quot;{personalInfo.overviewSummary || 'Junior Research Fellow at IIT Kharagpur engineering scalable web systems & AI/ML models.'}&quot;
             </div>
           </div>
 
@@ -301,15 +322,15 @@ export const Hero: React.FC<HeroProps> = ({ personalInfo, onOpenCLI }) => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
               <Cpu size={18} color="var(--terminal-cyan)" />
               <h3 style={{ fontSize: '0.975rem', fontWeight: 800, letterSpacing: '-0.01em', fontFamily: 'var(--font-mono)' }}>
-                /etc/developer.conf
+                /etc/research.conf
               </h3>
             </div>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px', fontFamily: 'var(--font-mono)' }}>
               {[
+                'IIT Kharagpur Research Fellow (JRF)',
                 'MERN Stack Architecture & REST APIs',
                 'TypeScript & End-to-End Type Safety',
-                'Python & AI/ML Predictive Analytics',
-                'Docker, MongoDB & Industrial Systems'
+                'Python & AI/ML Predictive Analytics'
               ].map((item, idx) => (
                 <li key={idx} style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <CheckCircle2 size={14} color="var(--terminal-green)" style={{ flexShrink: 0 }} />

@@ -42,12 +42,11 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({ data, 
         content: (
           <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '20px', alignItems: 'center', padding: '10px 0' }}>
             <div style={{ color: 'var(--terminal-green)', fontFamily: 'var(--font-mono)', fontSize: '0.8rem', lineHeight: 1.25, whiteSpace: 'pre' }}>
-{`   _____                           
-  / ____|                          
- | |  __  __ _ _ __   __ _ _ __    
- | | |_ |/ _\` | '_ \\ / _\` | '_ \\   
- | |__| | (_| | | | | (_| | | | |  
-  \\_____|\\__,_|_| |_|\\__,_|_| |_|`}
+{`  __  __   _   _   _    _  _   
+ |  \\/  | / \\ | \\ | |  / \\| \\ | 
+ | |\\/| |/ _ \\|  \\| | / _ \\  \\| |
+ | |  | / ___ \\ |\\  |/ ___ \\ |\\ |
+ |_|  |_/_/   \\_\\_| \\_/_/   \\_\\_|`}
             </div>
             <div style={{ fontSize: '0.85rem', fontFamily: 'var(--font-mono)', lineHeight: 1.6 }}>
               <div style={{ color: 'var(--terminal-cyan)', fontWeight: 800 }}>manan@dev-box:~$</div>
