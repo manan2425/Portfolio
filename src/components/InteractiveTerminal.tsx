@@ -25,9 +25,14 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({ data, 
   const [matrixActive, setMatrixActive] = useState(false);
   const terminalEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isFirstRender = useRef(true);
 
-  // Auto-scroll to bottom on new output
+  // Auto-scroll to bottom on new output (only on user actions, not on page refresh/mount)
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [outputList]);
 
