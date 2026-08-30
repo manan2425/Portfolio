@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { PersonalInfo } from '@/data/portfolioData';
-import { Send, Copy, Check, Mail, MessageSquare, Github, Linkedin, ArrowUpRight } from 'lucide-react';
+import { Send, Copy, Check, Mail, MessageSquare, Github, Linkedin, Terminal, CornerDownLeft } from 'lucide-react';
 
 interface ContactProps {
   personalInfo: PersonalInfo;
@@ -31,19 +31,19 @@ export const Contact: React.FC<ContactProps> = ({ personalInfo }) => {
   };
 
   return (
-    <section id="contact" className="section-spacing" style={{ backgroundColor: '#FFFFFF', borderTop: '1px solid var(--border-card)' }}>
+    <section id="contact" className="section-spacing" style={{ backgroundColor: 'var(--bg-app)', borderTop: '1px solid var(--border-card)' }}>
       <div className="container">
         {/* Header */}
         <div style={{ marginBottom: '40px' }}>
           <span className="bento-section-tag">
-            <MessageSquare size={13} />
-            <span>LET'S CONNECT</span>
+            <Terminal size={14} color="var(--terminal-green)" />
+            <span>$ curl -X POST /api/contact</span>
           </span>
           <h2 className="section-title">
-            Get In <span className="gradient-heading">Touch</span>
+            Initialize <span className="gradient-heading">Connection</span>
           </h2>
           <p className="section-subtitle" style={{ marginTop: '8px' }}>
-            Have a project in mind, engineering role opportunity, or technical question? Drop me a message.
+            Have a project in mind, software developer opportunity, or technical discussion? Send a CLI payload.
           </p>
         </div>
 
@@ -56,13 +56,13 @@ export const Contact: React.FC<ContactProps> = ({ personalInfo }) => {
           }}
           className="contact-bento-grid"
         >
-          {/* Left Column: Email & Social Bento Card */}
-          <div className="bento-card" style={{ padding: '32px', backgroundColor: 'var(--bg-card-subtle)' }}>
-            <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '12px' }}>
-              Direct Communication
+          {/* Left Column: Direct Email & Social Terminal Card */}
+          <div className="bento-card" style={{ padding: '32px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-card-hover)' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '12px', fontFamily: 'var(--font-mono)' }}>
+              Direct Endpoints
             </h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.925rem', lineHeight: 1.6, marginBottom: '28px' }}>
-              Feel free to reach out via email or connect with me on social platforms. I usually respond within a few hours.
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '28px' }}>
+              Reach out directly via email or social developer networks.
             </p>
 
             {/* Email Copy Box */}
@@ -70,7 +70,7 @@ export const Contact: React.FC<ContactProps> = ({ personalInfo }) => {
               style={{
                 padding: '16px',
                 borderRadius: 'var(--radius-md)',
-                backgroundColor: '#FFFFFF',
+                backgroundColor: 'var(--bg-terminal)',
                 border: '1px solid var(--border-card)',
                 marginBottom: '24px',
                 display: 'flex',
@@ -78,35 +78,35 @@ export const Contact: React.FC<ContactProps> = ({ personalInfo }) => {
                 justifyContent: 'space-between'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Mail size={20} color="var(--accent-blue)" />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <Mail size={20} color="var(--terminal-cyan)" />
                 <div>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-subtle)', textTransform: 'uppercase' }}>EMAIL</div>
-                  <div style={{ fontSize: '0.925rem', fontWeight: 800, color: 'var(--text-main)' }}>{personalInfo.email}</div>
+                  <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-subtle)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>$ export DEV_EMAIL</div>
+                  <div style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-main)', fontFamily: 'var(--font-mono)' }}>{personalInfo.email}</div>
                 </div>
               </div>
 
               <button onClick={handleCopyEmail} className="btn btn-secondary btn-sm" title="Copy Email">
-                {copied ? <Check size={14} color="var(--status-green)" /> : <Copy size={14} />}
+                {copied ? <Check size={14} color="var(--terminal-green)" /> : <Copy size={14} />}
                 <span>{copied ? 'Copied' : 'Copy'}</span>
               </button>
             </div>
 
-            {/* Social Buttons */}
+            {/* Social Links */}
             <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-subtle)', textTransform: 'uppercase', marginBottom: '10px' }}>
-                SOCIAL NETWORK
+              <div style={{ fontSize: '0.725rem', fontWeight: 800, color: 'var(--text-subtle)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '10px' }}>
+                SOCIAL NETWORKS
               </div>
               <div style={{ display: 'flex', gap: '10px' }}>
                 {personalInfo.github && (
-                  <a href={personalInfo.github} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm" style={{ flex: 1 }}>
-                    <Github size={15} />
+                  <a href={personalInfo.github} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm" style={{ flex: 1, fontFamily: 'var(--font-mono)' }}>
+                    <Github size={14} />
                     <span>GitHub</span>
                   </a>
                 )}
                 {personalInfo.linkedin && (
-                  <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm" style={{ flex: 1 }}>
-                    <Linkedin size={15} />
+                  <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm" style={{ flex: 1, fontFamily: 'var(--font-mono)' }}>
+                    <Linkedin size={14} />
                     <span>LinkedIn</span>
                   </a>
                 )}
@@ -114,60 +114,77 @@ export const Contact: React.FC<ContactProps> = ({ personalInfo }) => {
             </div>
           </div>
 
-          {/* Right Column: Message Form Bento Card */}
-          <div className="bento-card" style={{ padding: '32px', backgroundColor: '#FFFFFF' }}>
-            {submitted ? (
-              <div style={{ textAlign: 'center', padding: '32px 12px' }}>
-                <Check size={36} color="var(--status-green)" style={{ marginBottom: '12px' }} />
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '6px' }}>Message Sent!</h3>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                  Thank you for reaching out. I'll get back to you shortly.
-                </p>
+          {/* Right Column: Terminal POST Form Window */}
+          <div className="terminal-window" style={{ display: 'flex', flexDirection: 'column' }}>
+            <div className="terminal-header">
+              <div className="terminal-dots">
+                <span className="terminal-dot dot-red"></span>
+                <span className="terminal-dot dot-yellow"></span>
+                <span className="terminal-dot dot-green"></span>
               </div>
-            ) : (
-              <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <label className="form-label">YOUR NAME</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Jane Doe"
-                    className="form-input"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  />
-                </div>
+              <div className="terminal-title">
+                <Terminal size={12} color="var(--terminal-green)" />
+                <span>POST /api/v1/contact --json</span>
+              </div>
+              <span style={{ fontSize: '0.7rem', color: 'var(--terminal-green)', fontFamily: 'var(--font-mono)' }}>HTTP 200 OK</span>
+            </div>
 
-                <div className="form-group">
-                  <label className="form-label">EMAIL ADDRESS</label>
-                  <input
-                    type="email"
-                    required
-                    placeholder="jane@example.com"
-                    className="form-input"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  />
+            <div style={{ padding: '28px', backgroundColor: 'var(--bg-terminal)', flex: 1 }}>
+              {submitted ? (
+                <div style={{ textAlign: 'center', padding: '32px 12px', fontFamily: 'var(--font-mono)' }}>
+                  <Check size={40} color="var(--terminal-green)" style={{ marginBottom: '12px' }} />
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--terminal-green)', marginBottom: '6px' }}>
+                    Payload Delivered (200 OK)
+                  </h3>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+                    Thank you! Your message payload has been transmitted successfully.
+                  </p>
                 </div>
+              ) : (
+                <form onSubmit={handleSubmit}>
+                  <div className="form-group">
+                    <label className="form-label">SENDER NAME ($ NAME)</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Jane Doe"
+                      className="form-input"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    />
+                  </div>
 
-                <div className="form-group">
-                  <label className="form-label">MESSAGE</label>
-                  <textarea
-                    rows={4}
-                    required
-                    placeholder="Hi Manan, I'd like to talk about..."
-                    className="form-textarea"
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  />
-                </div>
+                  <div className="form-group">
+                    <label className="form-label">EMAIL ENDPOINT ($ EMAIL)</label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="jane@example.com"
+                      className="form-input"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    />
+                  </div>
 
-                <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '12px' }}>
-                  <span>Send Message</span>
-                  <Send size={15} />
-                </button>
-              </form>
-            )}
+                  <div className="form-group">
+                    <label className="form-label">MESSAGE PAYLOAD ($ BODY)</label>
+                    <textarea
+                      rows={4}
+                      required
+                      placeholder="Hi Manan, I'd like to discuss a project..."
+                      className="form-textarea"
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    />
+                  </div>
+
+                  <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '12px', fontFamily: 'var(--font-mono)' }}>
+                    <span>Send Payload</span>
+                    <Send size={15} />
+                  </button>
+                </form>
+              )}
+            </div>
           </div>
         </div>
       </div>

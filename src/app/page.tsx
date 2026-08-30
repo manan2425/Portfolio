@@ -11,10 +11,12 @@ import { Experience } from '@/components/Experience';
 import { Achievements } from '@/components/Achievements';
 import { Contact } from '@/components/Contact';
 import { Footer } from '@/components/Footer';
+import { InteractiveTerminal } from '@/components/InteractiveTerminal';
 
 export default function Home() {
   const [data, setData] = useState<PortfolioData>(initialPortfolioData);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [viewMode, setViewMode] = useState<'gui' | 'cli'>('gui');
 
   useEffect(() => {
     // 1. Instant render from local storage cache
@@ -46,15 +48,57 @@ export default function Home() {
       });
   }, []);
 
+  const handleNavigateSection = (sectionId: string) => {
+    setViewMode('gui');
+    setTimeout(() => {
+      const el = document.getElementById(sectionId);
+      el?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
   return (
-    <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Navbar personalInfo={data.personalInfo} />
-      <Hero personalInfo={data.personalInfo} />
-      <Projects projects={data.projects || []} onSelectProject={(p) => setSelectedProject(p)} />
-      <Skills skills={data.skills || []} />
-      <Experience experience={data.experience || []} />
-      <Achievements achievements={data.achievements || []} />
-      <Contact personalInfo={data.personalInfo} />
+    <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-app)' }}>
+      <Navbar
+        personalInfo={data.personalInfo}
+        viewMode={viewMode}
+        onToggleViewMode={(mode) => setViewMode(mode)}
+      />
+
+      {viewMode === 'cli' ? (
+        <div className="container" style={{ paddingTop: '120px', paddingBottom: '80px', flex: 1 }}>
+          <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+            <span className="bento-section-tag">FULL INTERACTIVE LINUX TERMINAL SESSION</span>
+            <h1 className="section-title">Developer Bash Shell</h1>
+            <p className="section-subtitle" style={{ margin: '8px auto 0 auto' }}>
+              Type commands like <span style={{ color: 'var(--terminal-green)', fontFamily: 'var(--font-mono)' }}>neofetch</span>, <span style={{ color: 'var(--terminal-cyan)', fontFamily: 'var(--font-mono)' }}>projects</span>, <span style={{ color: 'var(--terminal-yellow)', fontFamily: 'var(--font-mono)' }}>skills</span>, <span style={{ color: 'var(--terminal-purple)', fontFamily: 'var(--font-mono)' }}>contact</span>, or <span style={{ color: 'var(--terminal-prompt)', fontFamily: 'var(--font-mono)' }}>matrix</span>.
+            </p>
+          </div>
+          <InteractiveTerminal data={data} onNavigateSection={handleNavigateSection} />
+        </div>
+      ) : (
+        <>
+          <Hero personalInfo={data.personalInfo} onOpenCLI={() => setViewMode('cli')} />
+
+          {/* Embedded CLI Terminal Block */}
+          <section style={{ padding: '20px 0 60px 0' }}>
+            <div className="container">
+              <div style={{ marginBottom: '24px', textAlign: 'center' }}>
+                <span className="bento-section-tag">
+                  Interactive Terminal Emulator
+                </span>
+              </div>
+              <InteractiveTerminal data={data} onNavigateSection={handleNavigateSection} />
+            </div>
+          </section>
+
+          <Projects projects={data.projects || []} onSelectProject={(p) => setSelectedProject(p)} />
+          <Skills skills={data.skills || []} />
+          <Experience experience={data.experience || []} />
+          <Achievements achievements={data.achievements || []} />
+          <Contact personalInfo={data.personalInfo} />
+        </>
+      )}
+
       <Footer personalInfo={data.personalInfo} />
 
       <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />

@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { PersonalInfo } from '@/data/portfolioData';
-import { ArrowUp } from 'lucide-react';
+import { ArrowUp, Terminal } from 'lucide-react';
 
 interface FooterProps {
   personalInfo: PersonalInfo;
@@ -17,7 +17,7 @@ export const Footer: React.FC<FooterProps> = ({ personalInfo }) => {
   return (
     <footer
       style={{
-        backgroundColor: '#FFFFFF',
+        backgroundColor: 'var(--bg-app)',
         borderTop: '1px solid var(--border-card)',
         padding: '36px 0'
       }}
@@ -33,11 +33,11 @@ export const Footer: React.FC<FooterProps> = ({ personalInfo }) => {
           }}
         >
           <div>
-            <div style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
-              {personalInfo.name} <span className="gradient-heading">Portfolio</span>
+            <div style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em', fontFamily: 'var(--font-mono)' }}>
+              manan@dev:<span style={{ color: 'var(--terminal-green)' }}>~</span>$ echo &quot;Built by {personalInfo.name}&quot;
             </div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-subtle)', marginTop: '2px' }}>
-              Built with Next.js & TypeScript <Link href="/admin/login" style={{ color: 'inherit', textDecoration: 'none', cursor: 'default' }}>©</Link> {new Date().getFullYear()}
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-subtle)', marginTop: '4px', fontFamily: 'var(--font-mono)' }}>
+              Next.js 14 App Router • TypeScript • Tailwind/Vanilla CSS • <Link href="/admin/login" style={{ color: 'inherit', textDecoration: 'none', cursor: 'default' }}>©</Link> {new Date().getFullYear()}
             </div>
           </div>
 
@@ -45,10 +45,10 @@ export const Footer: React.FC<FooterProps> = ({ personalInfo }) => {
             <button
               onClick={scrollToTop}
               className="btn btn-secondary btn-sm"
-              style={{ borderRadius: 'var(--radius-full)', padding: '6px 12px' }}
+              style={{ borderRadius: 'var(--radius-full)', padding: '6px 14px', fontFamily: 'var(--font-mono)' }}
               aria-label="Back to top"
             >
-              <span>Top</span>
+              <span>^ Top</span>
               <ArrowUp size={13} />
             </button>
           </div>

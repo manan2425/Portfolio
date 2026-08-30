@@ -3,13 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { PersonalInfo } from '@/data/portfolioData';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Terminal, GitBranch, Monitor, Cpu, Sparkles } from 'lucide-react';
 
 interface NavbarProps {
   personalInfo: PersonalInfo;
+  viewMode?: 'gui' | 'cli';
+  onToggleViewMode?: (mode: 'gui' | 'cli') => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ personalInfo }) => {
+export const Navbar: React.FC<NavbarProps> = ({ personalInfo, viewMode = 'gui', onToggleViewMode }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -44,44 +46,70 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo }) => {
       <div
         className="bento-glass"
         style={{
-          maxWidth: '1080px',
+          maxWidth: '1120px',
           width: 'calc(100% - 32px)',
-          padding: '10px 20px',
+          padding: '10px 22px',
           borderRadius: 'var(--radius-full)',
-          border: '1px solid var(--border-card)',
-          boxShadow: scrolled ? '0 10px 30px -10px rgba(0, 0, 0, 0.1)' : 'var(--shadow-bento)',
+          border: '1px solid var(--border-card-hover)',
+          boxShadow: scrolled ? '0 12px 40px rgba(0, 0, 0, 0.6)' : 'var(--shadow-bento)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           transition: 'all 0.25s ease'
         }}
       >
-        {/* Brand Monogram Logo */}
-        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        {/* Linux Terminal Brand Prompt */}
+        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div
             style={{
               width: '32px',
               height: '32px',
-              borderRadius: '50%',
-              background: 'var(--accent-gradient)',
+              borderRadius: 'var(--radius-sm)',
+              background: 'rgba(6, 182, 212, 0.15)',
+              border: '1px solid var(--terminal-cyan)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#FFFFFF',
-              fontWeight: 800,
-              fontSize: '0.9rem',
-              boxShadow: '0 2px 8px rgba(37, 99, 235, 0.3)'
+              color: 'var(--terminal-cyan)',
+              boxShadow: '0 0 12px rgba(6, 182, 212, 0.2)'
             }}
           >
-            M
+            <Terminal size={18} />
           </div>
-          <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
-            {personalInfo.name}
-          </span>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span style={{ fontSize: '0.925rem', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.02em', fontFamily: 'var(--font-mono)' }}>
+              manan@dev:<span style={{ color: 'var(--terminal-green)' }}>~</span>$
+            </span>
+            <span style={{ fontSize: '0.68rem', color: 'var(--terminal-cyan)', fontWeight: 600, fontFamily: 'var(--font-mono)' }}>
+              {personalInfo.name}
+            </span>
+          </div>
         </Link>
 
-        {/* Desktop Nav Links */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '28px' }} className="desktop-nav">
+        {/* Git Branch & Status Pill (Desktop) */}
+        <div className="desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '4px 10px',
+              borderRadius: 'var(--radius-full)',
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              border: '1px solid rgba(16, 185, 129, 0.3)',
+              fontSize: '0.75rem',
+              color: 'var(--terminal-green)',
+              fontFamily: 'var(--font-mono)',
+              fontWeight: 700
+            }}
+          >
+            <GitBranch size={13} />
+            <span>git:(main) ✚</span>
+          </div>
+        </div>
+
+        {/* Desktop Navigation Links */}
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '24px' }} className="desktop-nav">
           {navLinks.map((link) => (
             <a
               key={link.name}
@@ -90,10 +118,11 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo }) => {
                 textDecoration: 'none',
                 color: 'var(--text-muted)',
                 fontWeight: 600,
-                fontSize: '0.875rem',
+                fontSize: '0.85rem',
+                fontFamily: 'var(--font-mono)',
                 transition: 'color 0.15s ease'
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent-blue)')}
+              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--terminal-cyan)')}
               onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
             >
               {link.name}
@@ -101,14 +130,33 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo }) => {
           ))}
         </nav>
 
-        {/* Actions */}
+        {/* Actions & View Mode Toggle */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {onToggleViewMode && (
+            <button
+              onClick={() => onToggleViewMode(viewMode === 'gui' ? 'cli' : 'gui')}
+              className="btn btn-secondary btn-sm"
+              style={{
+                borderRadius: 'var(--radius-full)',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.78rem',
+                borderColor: 'var(--border-card-hover)',
+                backgroundColor: viewMode === 'cli' ? 'rgba(16, 185, 129, 0.2)' : 'var(--bg-card-subtle)',
+                color: viewMode === 'cli' ? 'var(--terminal-green)' : 'var(--terminal-cyan)'
+              }}
+              title="Switch UI Mode"
+            >
+              {viewMode === 'cli' ? <Monitor size={14} /> : <Terminal size={14} />}
+              <span>{viewMode === 'cli' ? 'GUI View' : 'CLI Terminal'}</span>
+            </button>
+          )}
+
           <a href="#contact" className="btn btn-primary btn-sm" style={{ borderRadius: 'var(--radius-full)' }}>
             <span>Connect</span>
             <ArrowUpRight size={14} />
           </a>
 
-          {/* Mobile menu toggle */}
+          {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="mobile-toggle"
@@ -120,7 +168,7 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo }) => {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
         <div
           style={{
@@ -128,11 +176,11 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo }) => {
             top: '60px',
             left: '16px',
             right: '16px',
-            background: '#FFFFFF',
+            background: 'var(--bg-card)',
             borderRadius: 'var(--radius-lg)',
-            border: '1px solid var(--border-card)',
+            border: '1px solid var(--border-card-hover)',
             padding: '20px',
-            boxShadow: '0 15px 35px rgba(0,0,0,0.12)',
+            boxShadow: '0 15px 35px rgba(0,0,0,0.7)',
             display: 'flex',
             flexDirection: 'column',
             gap: '14px'
@@ -147,7 +195,8 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo }) => {
                 textDecoration: 'none',
                 color: 'var(--text-main)',
                 fontWeight: 700,
-                fontSize: '1rem'
+                fontSize: '0.95rem',
+                fontFamily: 'var(--font-mono)'
               }}
             >
               {link.name}
@@ -157,15 +206,12 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo }) => {
       )}
 
       <style jsx>{`
-        @media (max-width: 768px) {
+        @media (max-width: 860px) {
           .desktop-nav {
             display: none !important;
           }
-          .hide-mobile {
-            display: none;
-          }
         }
-        @media (min-width: 769px) {
+        @media (min-width: 861px) {
           .mobile-toggle {
             display: none !important;
           }

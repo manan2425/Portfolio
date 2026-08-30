@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Project } from '@/data/portfolioData';
-import { X, ExternalLink, Github, CheckCircle2, Layers, Zap, Info, ShieldCheck } from 'lucide-react';
+import { X, ExternalLink, Github, CheckCircle2, Layers, Zap, Info, ShieldCheck, Terminal, FileCode } from 'lucide-react';
 
 interface ProjectModalProps {
   project: Project | null;
@@ -27,53 +27,34 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
       <div
         className="bento-card"
         style={{
-          maxWidth: '760px',
+          maxWidth: '780px',
           width: '100%',
           maxHeight: '90vh',
           overflowY: 'auto',
           padding: '0',
           position: 'relative',
-          backgroundColor: '#FFFFFF',
-          borderRadius: 'var(--radius-xl)'
+          backgroundColor: 'var(--bg-card)',
+          borderRadius: 'var(--radius-xl)',
+          border: '1px solid var(--border-card-hover)'
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Browser Header Bar */}
-        <div
-          style={{
-            padding: '12px 20px',
-            backgroundColor: '#F1F5F9',
-            borderBottom: '1px solid var(--border-card)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            position: 'sticky',
-            top: 0,
-            zIndex: 10
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ display: 'flex', gap: '6px' }}>
-              <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#EF4444' }}></span>
-              <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#F59E0B' }}></span>
-              <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#10B981' }}></span>
-            </div>
-            <span style={{ fontSize: '0.78rem', color: 'var(--text-subtle)', fontWeight: 600, fontFamily: 'monospace' }}>
-              case-study://{project.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}
-            </span>
+        {/* Linux Terminal / IDE Header */}
+        <div className="terminal-header" style={{ position: 'sticky', top: 0, zIndex: 10 }}>
+          <div className="terminal-dots">
+            <span className="terminal-dot dot-red" onClick={onClose} style={{ cursor: 'pointer' }}></span>
+            <span className="terminal-dot dot-yellow"></span>
+            <span className="terminal-dot dot-green"></span>
           </div>
-
+          <div className="terminal-title">
+            <FileCode size={13} color="var(--terminal-cyan)" />
+            <span>cat ~/projects/{project.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}/README.md</span>
+          </div>
           <button
             onClick={onClose}
             style={{
               background: 'none',
               border: 'none',
-              borderRadius: '50%',
-              width: '28px',
-              height: '28px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
               cursor: 'pointer',
               color: 'var(--text-muted)'
             }}
@@ -85,29 +66,31 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
 
         {/* Modal Inner Body */}
         <div className="modal-inner-body" style={{ padding: '32px' }}>
-          {/* Header Metadata */}
+          {/* Header Title Metadata */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '20px' }}>
             <div>
               <span
                 style={{
                   padding: '4px 12px',
                   borderRadius: 'var(--radius-full)',
-                  backgroundColor: 'var(--accent-blue-light)',
-                  color: 'var(--accent-blue)',
+                  backgroundColor: 'rgba(6, 182, 212, 0.15)',
+                  color: 'var(--terminal-cyan)',
+                  border: '1px solid rgba(6, 182, 212, 0.3)',
                   fontSize: '0.75rem',
                   fontWeight: 800,
+                  fontFamily: 'var(--font-mono)',
                   display: 'inline-block',
                   marginBottom: '8px'
                 }}
               >
-                {project.category.toUpperCase()} CASE STUDY
+                [{project.category.toUpperCase()}] REPO SPECS
               </span>
-              <h2 style={{ fontSize: 'clamp(1.3rem, 4vw, 1.85rem)', fontWeight: 800, color: 'var(--text-main)' }}>
+              <h2 style={{ fontSize: 'clamp(1.3rem, 4vw, 1.85rem)', fontWeight: 800, color: 'var(--text-main)', fontFamily: 'var(--font-mono)' }}>
                 {project.title}
               </h2>
             </div>
 
-            {/* Quick Live Buttons */}
+            {/* Links */}
             <div style={{ display: 'flex', gap: '10px' }}>
               {project.liveUrl && project.liveUrl !== '#' && (
                 <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-sm" style={{ borderRadius: 'var(--radius-full)' }}>
@@ -116,9 +99,9 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
                 </a>
               )}
               {project.githubUrl && project.githubUrl !== '#' && (
-                <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm" style={{ borderRadius: 'var(--radius-full)' }}>
+                <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm" style={{ borderRadius: 'var(--radius-full)', fontFamily: 'var(--font-mono)' }}>
                   <Github size={14} />
-                  <span>GitHub</span>
+                  <span>Code</span>
                 </a>
               )}
             </div>
@@ -135,7 +118,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
                 overflow: 'hidden',
                 marginBottom: '28px',
                 position: 'relative',
-                backgroundColor: 'var(--bg-card-subtle)',
+                backgroundColor: 'var(--bg-terminal)',
                 border: '1px solid var(--border-card)'
               }}
             >
@@ -154,9 +137,9 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
             }}
           >
             {[
-              { id: 'overview', label: 'Overview', icon: Info },
+              { id: 'overview', label: 'README.md', icon: Info },
               { id: 'features', label: 'Key Accomplishments', icon: Zap },
-              { id: 'stack', label: 'Tech Stack', icon: Layers },
+              { id: 'stack', label: 'package.json', icon: Layers },
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -167,18 +150,19 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
                   style={{
                     padding: '8px 16px',
                     borderRadius: 'var(--radius-sm)',
-                    fontSize: '0.875rem',
+                    fontSize: '0.85rem',
                     fontWeight: 700,
+                    fontFamily: 'var(--font-mono)',
                     border: 'none',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '6px',
-                    backgroundColor: isActive ? 'var(--accent-blue-light)' : 'transparent',
-                    color: isActive ? 'var(--accent-blue)' : 'var(--text-muted)'
+                    backgroundColor: isActive ? 'rgba(6, 182, 212, 0.15)' : 'transparent',
+                    color: isActive ? 'var(--terminal-cyan)' : 'var(--text-muted)'
                   }}
                 >
-                  <Icon size={15} />
+                  <Icon size={14} />
                   <span>{tab.label}</span>
                 </button>
               );
@@ -188,7 +172,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
           {/* TAB 1: OVERVIEW */}
           {activeTab === 'overview' && (
             <div>
-              <p style={{ color: 'var(--text-muted)', lineHeight: 1.7, fontSize: '1.025rem', marginBottom: '20px' }}>
+              <p style={{ color: 'var(--text-muted)', lineHeight: 1.7, fontSize: '0.975rem', marginBottom: '20px' }}>
                 {project.longDescription || project.description}
               </p>
 
@@ -196,16 +180,17 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
                 style={{
                   padding: '20px',
                   borderRadius: 'var(--radius-md)',
-                  backgroundColor: 'var(--bg-card-subtle)',
-                  border: '1px solid var(--border-card)'
+                  backgroundColor: 'var(--bg-terminal)',
+                  border: '1px solid var(--border-card)',
+                  fontFamily: 'var(--font-mono)'
                 }}
               >
-                <h4 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <ShieldCheck size={16} color="var(--accent-blue)" />
+                <h4 style={{ fontSize: '0.875rem', fontWeight: 800, color: 'var(--terminal-green)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <ShieldCheck size={16} color="var(--terminal-green)" />
                   <span>Architecture & Reliability</span>
                 </h4>
-                <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.6 }}>
-                  Built with modular component architecture, server-rendered components for low latency, and robust error boundary handling.
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.6 }}>
+                  Architected with modular full-stack services, type-safe API boundaries, and low-latency rendering performance.
                 </p>
               </div>
             </div>
@@ -222,20 +207,21 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
                       style={{
                         padding: '14px 18px',
                         borderRadius: 'var(--radius-md)',
-                        backgroundColor: 'var(--bg-card-subtle)',
+                        backgroundColor: 'var(--bg-terminal)',
                         border: '1px solid var(--border-card)',
                         display: 'flex',
                         alignItems: 'flex-start',
-                        gap: '12px'
+                        gap: '12px',
+                        fontFamily: 'var(--font-mono)'
                       }}
                     >
-                      <CheckCircle2 size={18} color="var(--accent-blue)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                      <span style={{ fontSize: '0.925rem', fontWeight: 600, color: 'var(--text-main)' }}>{item}</span>
+                      <CheckCircle2 size={18} color="var(--terminal-green)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                      <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-main)' }}>{item}</span>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p style={{ color: 'var(--text-muted)' }}>No features documented yet.</p>
+                <p style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>No features documented yet.</p>
               )}
             </div>
           )}
@@ -243,24 +229,25 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
           {/* TAB 3: STACK */}
           {activeTab === 'stack' && (
             <div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '10px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '10px' }}>
                 {project.tags.map((tag, idx) => (
                   <div
                     key={idx}
                     style={{
                       padding: '12px 16px',
                       borderRadius: 'var(--radius-md)',
-                      backgroundColor: 'var(--accent-blue-light)',
-                      border: '1px solid var(--accent-blue-border)',
-                      color: 'var(--accent-blue)',
+                      backgroundColor: 'var(--bg-terminal)',
+                      border: '1px solid var(--border-card)',
+                      color: 'var(--terminal-cyan)',
                       fontWeight: 700,
-                      fontSize: '0.875rem',
+                      fontSize: '0.825rem',
+                      fontFamily: 'var(--font-mono)',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '8px'
                     }}
                   >
-                    <Layers size={15} />
+                    <Layers size={14} color="var(--terminal-green)" />
                     <span>{tag}</span>
                   </div>
                 ))}
@@ -269,20 +256,6 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
           )}
         </div>
       </div>
-
-      <style jsx>{`
-        @media (max-width: 640px) {
-          .modal-overlay {
-            padding: 12px !important;
-          }
-          :global(.modal-inner-body) {
-            padding: 20px !important;
-          }
-          :global(.modal-image-banner) {
-            height: 180px !important;
-          }
-        }
-      `}</style>
     </div>
   );
 };
