@@ -22,7 +22,18 @@ export default function Home() {
     // Force scroll to top (Hero section) on page refresh/mount
     if (typeof window !== 'undefined') {
       window.history.scrollRestoration = 'manual';
-      window.scrollTo(0, 0);
+
+      // Clear any anchor hash (#projects, #experience) from URL so browser does not jump down on refresh
+      if (window.location.hash) {
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+
+      // Secondary scroll safety tick after DOM layout hydration
+      setTimeout(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      }, 60);
 
       // 1. Instant render from local storage cache
       const savedLocalData = localStorage.getItem('portfolio_custom_data');
