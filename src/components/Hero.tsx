@@ -15,7 +15,8 @@ import {
   Terminal as TerminalIcon,
   Zap,
   CheckCircle2,
-  Award
+  Award,
+  Clock
 } from 'lucide-react';
 
 interface HeroProps {
@@ -25,6 +26,7 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ personalInfo, onOpenCLI }) => {
   const [typedText, setTypedText] = useState('');
+  const [currentTime, setCurrentTime] = useState<string>('');
   const fullText = `npx introduce-developer --name "${personalInfo.name}" --title "${personalInfo.title}"`;
 
   useEffect(() => {
@@ -39,6 +41,16 @@ export const Hero: React.FC<HeroProps> = ({ personalInfo, onOpenCLI }) => {
     }, 45);
     return () => clearInterval(timer);
   }, [fullText]);
+
+  // Real-time ticking clock
+  useEffect(() => {
+    const updateClock = () => {
+      setCurrentTime(new Date().toLocaleTimeString());
+    };
+    updateClock();
+    const interval = setInterval(updateClock, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <section style={{ paddingTop: '120px', paddingBottom: '60px' }}>
@@ -65,7 +77,7 @@ export const Hero: React.FC<HeroProps> = ({ personalInfo, onOpenCLI }) => {
               border: '1px solid var(--border-card-hover)'
             }}
           >
-            {/* Linux Window Header */}
+            {/* Linux Window Header with Real-Time Clock */}
             <div className="terminal-header">
               <div className="terminal-dots">
                 <span className="terminal-dot dot-red"></span>
@@ -76,8 +88,9 @@ export const Hero: React.FC<HeroProps> = ({ personalInfo, onOpenCLI }) => {
                 <TerminalIcon size={14} color="var(--terminal-green)" />
                 <span>manan@iitkgp-dev: ~/profile.sh</span>
               </div>
-              <div style={{ fontSize: '0.72rem', color: 'var(--terminal-cyan)', fontFamily: 'var(--font-mono)' }}>
-                bash 5.2
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.72rem', color: 'var(--terminal-cyan)', fontFamily: 'var(--font-mono)' }}>
+                <Clock size={11} />
+                <span>{currentTime || 'Real-Time'}</span>
               </div>
             </div>
 
@@ -109,7 +122,7 @@ export const Hero: React.FC<HeroProps> = ({ personalInfo, onOpenCLI }) => {
                 {personalInfo.isAvailable && (
                   <div className="status-pill">
                     <span className="status-dot-green"></span>
-                    <span>Status: Available for Research & Dev Roles</span>
+                    <span>Status: Open for Research & Dev Roles</span>
                   </div>
                 )}
                 {personalInfo.location && (
@@ -140,18 +153,19 @@ export const Hero: React.FC<HeroProps> = ({ personalInfo, onOpenCLI }) => {
                 <span className="cursor-blink"></span>
               </div>
 
-              {/* Title & Headline */}
+              {/* Title & Headline - IIT Kharagpur in same large font size as JRF */}
               <h1
                 style={{
-                  fontSize: 'clamp(2.1rem, 4vw, 3.1rem)',
+                  fontSize: 'clamp(2.1rem, 4vw, 3.2rem)',
                   fontWeight: 800,
                   lineHeight: 1.15,
                   letterSpacing: '-0.03em',
                   marginBottom: '16px'
                 }}
               >
-                Junior Research Fellow <br />
-                <span className="gradient-heading">{personalInfo.name}</span>
+                Junior Research Fellow (JRF) <br />
+                <span className="gradient-heading">@ IIT Kharagpur</span> <br />
+                <span style={{ fontSize: '0.825em', color: 'var(--text-main)' }}>{personalInfo.name}</span>
               </h1>
 
               {/* Bio summary */}

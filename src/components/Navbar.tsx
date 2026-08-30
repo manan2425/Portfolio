@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { PersonalInfo } from '@/data/portfolioData';
-import { Menu, X, ArrowUpRight, Terminal, GitBranch, Monitor, Cpu, Sparkles } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Terminal, GitBranch, Monitor, Clock } from 'lucide-react';
 
 interface NavbarProps {
   personalInfo: PersonalInfo;
@@ -14,6 +14,7 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ personalInfo, viewMode = 'gui', onToggleViewMode }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentTime, setCurrentTime] = useState<string>('');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +22,16 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo, viewMode = 'gui', 
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Real-time ticking clock (updates every second)
+  useEffect(() => {
+    const updateTime = () => {
+      setCurrentTime(new Date().toLocaleTimeString());
+    };
+    updateTime();
+    const timer = setInterval(updateTime, 1000);
+    return () => clearInterval(timer);
   }, []);
 
   const navLinks = [
@@ -78,16 +89,35 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo, viewMode = 'gui', 
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <span style={{ fontSize: '0.925rem', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.02em', fontFamily: 'var(--font-mono)' }}>
-              manan@dev:<span style={{ color: 'var(--terminal-green)' }}>~</span>$
+              manan@iitkgp:<span style={{ color: 'var(--terminal-green)' }}>~</span>$
             </span>
             <span style={{ fontSize: '0.68rem', color: 'var(--terminal-cyan)', fontWeight: 600, fontFamily: 'var(--font-mono)' }}>
-              {personalInfo.name}
+              {personalInfo.name} • JRF @ IIT Kharagpur
             </span>
           </div>
         </Link>
 
-        {/* Git Branch & Status Pill (Desktop) */}
-        <div className="desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        {/* Real-time Ticking Clock & Git Branch Pill (Desktop) */}
+        <div className="desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '4px 12px',
+              borderRadius: 'var(--radius-full)',
+              backgroundColor: 'rgba(6, 182, 212, 0.12)',
+              border: '1px solid rgba(6, 182, 212, 0.3)',
+              fontSize: '0.75rem',
+              color: 'var(--terminal-cyan)',
+              fontFamily: 'var(--font-mono)',
+              fontWeight: 700
+            }}
+          >
+            <Clock size={12} color="var(--terminal-cyan)" />
+            <span>{currentTime || 'Loading time...'}</span>
+          </div>
+
           <div
             style={{
               display: 'flex',
@@ -109,7 +139,7 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo, viewMode = 'gui', 
         </div>
 
         {/* Desktop Navigation Links */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '24px' }} className="desktop-nav">
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '22px' }} className="desktop-nav">
           {navLinks.map((link) => (
             <a
               key={link.name}
@@ -206,12 +236,12 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo, viewMode = 'gui', 
       )}
 
       <style jsx>{`
-        @media (max-width: 860px) {
+        @media (max-width: 880px) {
           .desktop-nav {
             display: none !important;
           }
         }
-        @media (min-width: 861px) {
+        @media (min-width: 881px) {
           .mobile-toggle {
             display: none !important;
           }

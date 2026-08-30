@@ -340,9 +340,12 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({ data, 
         </div>
         <div className="terminal-title">
           <Terminal size={14} color="var(--terminal-green)" />
-          <span>manan@dev-box: ~/portfolio-cli (zsh)</span>
+          <span>manan@iitkgp-dev: ~/portfolio-cli (zsh)</span>
         </div>
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ fontSize: '0.72rem', color: 'var(--terminal-cyan)', fontFamily: 'var(--font-mono)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span>{new Date().toLocaleTimeString()}</span>
+          </div>
           <button
             onClick={() => setOutputList([])}
             style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
